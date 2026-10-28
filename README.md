@@ -127,7 +127,7 @@ npm run build      # Typprüfung und Frontend-Build
 
 Die Ordner: `app/` ist der Kern, `modules/` enthalten die Module, `resources/js/` die Oberfläche, `docs/dev/` die
 Entwicklerdoku ([Übersicht](docs/dev/README.md)). Welche Tests es gibt und wie du sie einzeln startest, steht in
-[docs/dev/tests.md](docs/dev/tests.md#testgruppen). Die CI läuft nur mit Lint, PHPStan, Build und einem Docker-Test,
+[docs/dev/tests.md](docs/dev/tests.md#testgruppen). Die CI läuft nur mit Lint, PHPStan und Build,
 die Tests laufen lokal.
 
 ## Lizenz

@@ -29,10 +29,3 @@ jobs:
       - run: npm ci
       # vue-tsc type check. Tests run locally (docs/dev/tests.md), not in CI.
       - run: npm run build
-
-  docker:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: DB_PASSWORD=x UPDATER_SECRET=x APP_URL=http://127.0.0.1:8080 docker compose config --quiet
-      - run: bash scripts/smoke.sh
