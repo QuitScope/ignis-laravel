@@ -1,0 +1,459 @@
+/* Design-Tokens für ignis */
+/*  */
+/* Zwei Sätze, gewählt per Seite über data-skin am <html> (resources/js/lib/pageSkin.ts): */
+/* - `core` (Standard, :root): Skin `core` des Altsystems (ui-styles 0.9.4, ignis/public/assets/dist/ui.css), */
+/*   oklch-Werte (Farbton 265) vorab nach sRGB umgerechnet, color-mix() vorab gemischt. */
+/* - `classic` (:root[data-skin="classic"]): der bisherige Satz (Stand bf0a772) für die Tablet-Seiten */
+/*   (eNOTF, fireTab, Klinikportal, Druck), die sich nicht ändern dürfen. */
+/* Je Satz Dunkel als Standard, Hell bei data-theme="light". */
+/*  */
+/* Chromium 103 (FiveM-CEF): hier nur Literale, kein oklch(), color-mix(), :has(), @container */
+/* (Wächter: tests/js/cefCss.test.ts). Die Akzentrollen (--accent-fill, --on-accent …) setzt */
+/* App\Branding\Theme::css() für den Systemakzent; die Werte hier sind die des Standardakzents. */
+/* Die shadcn-Aliase (--card, --primary …) stehen in app.css; der classic-Satz deklariert sie */
+/* erneut, weil var() auf :root aufgelöst und als fertiger Wert vererbt wird. */
+
+:root {
+  color-scheme: dark;
+
+  --font: "Geist", "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Flächen: bg ist die Seite (Alt --canvas, Topbar, Sidebar), bg-2/surface die Hauptfläche, */
+  /* surface-2 Karte, surface-3/-4 Hover und Schale, well die Mulde, overlay Popover. */
+  --bg: #08090b;
+  --bg-2: #141517;
+  --surface: #141517;
+  --surface-2: #1c1d1f;
+  --surface-3: #252629;
+  --surface-4: #2d2e30;
+  --well: #161719;
+  --well-deep: #0c0d0f;
+  --overlay: #1f2023;
+  --kbd: #37383b;
+  --bezel-rim: var(--surface-4);
+  --track: var(--well-deep);
+  --canvas: var(--bg);
+  --border: #292a2d;
+  --border-control: #3e4042;
+  --border-ui: #6d6f72;
+  --border-strong: #7e8085;
+  --border-subtle: var(--border);
+
+  /* Licht und Schatten der Schalen und Knöpfe */
+  --hi: rgba(255, 255, 255, 0.05);
+  --shade: rgba(0, 0, 0, 0.4);
+  --shade-pop: rgba(0, 0, 0, 0.55);
+  --hairline: rgba(255, 255, 255, 0.07);
+  --hairline-strong: rgba(255, 255, 255, 0.12);
+  --well-ring: inset 0 1px 0 rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --tick-empty: rgba(255, 255, 255, 0.06);
+  --series-1: #3ecce2; /* oklch(78% .12 210), Datenreihe der Sparklines und Strichskala */
+  --edge-top: rgba(255, 255, 255, 0.1);
+  --edge-bottom: rgba(255, 255, 255, 0.03);
+  --btn-hi: rgba(255, 255, 255, 0.22);
+  --btn-lo: rgba(0, 0, 0, 0.15);
+
+  /* Füllungen über Flächen. Im hellen Satz werden sie dunkel. */
+  --fill-1: rgba(255, 255, 255, 0.03);
+  --fill-2: rgba(255, 255, 255, 0.06);
+  --fill-3: rgba(255, 255, 255, 0.1);
+  --fill-4: rgba(255, 255, 255, 0.18);
+  --fill-5: rgba(255, 255, 255, 0.35);
+
+  --text: #f0f2f4;
+  --text-2: #bcbec2;
+  --text-3: #9c9ea2;
+  --text-disabled: #626366;
+  --white: #fff;
+  --black: #000;
+  --content-text: var(--text);
+  --secondary-text: var(--text-2);
+  --tertiary-text: var(--text-3);
+
+  /* Akzent (Standard #f0500a; Rollen wie preferences.js d(), siehe App\Branding\AccentRoles). */
+  /* --accent ist die Füllung, --accent-text die lesbare Textfarbe auf den Flächen. */
+  --accent: #f0500a;
+  --accent-hover: #d34609;
+  --accent-rgb: 240, 80, 10;
+  --on-accent: #22110b;
+  --accent-fill: #f0500a;
+  --accent-fill-2: #d96e00;
+  --accent-text: #f26c31;
+  --accent-focus: #f0500a;
+  --accent-press: #ffffff;
+  --accent-base: var(--accent);
+  /* ponytail: Alt mischt 18/36 % in oklab auf --surface-2; rgba darüber ist auf Karten praktisch gleich. */
+  --accent-soft: rgba(var(--accent-rgb), 0.18);
+  --accent-line: rgba(var(--accent-rgb), 0.36);
+  --accent-glow: rgba(var(--accent-rgb), 0.45);
+
+  /* Bedeutungsfarben; -soft/-line = 18/36 % auf --surface-2 (Alt: color-mix in oklab), vorgemischt. */
+  --ok: #4ac777;
+  --ok-rgb: 74, 199, 119;
+  --ok-text: #71d790;
+  --ok-soft: #27382e;
+  --ok-line: #31553e;
+  --warn: #f4b93c;
+  --warn-rgb: 244, 185, 60;
+  --warn-text: #f8ca65;
+  --warn-soft: #3d3629;
+  --warn-line: #625131;
+  --danger: #f93f4e;
+  --danger-rgb: 249, 63, 78;
+  --danger-text: #ff9492;
+  --danger-soft: #412728;
+  --danger-line: #663031;
+  --info: #3fb1ea;
+  --info-rgb: 63, 177, 234;
+  --info-text: #7ac8f5;
+  --info-soft: #26353f;
+  --info-line: #2e4e61;
+  --cal-purple: #a371f7; /* calendar colour key `purple` */
+
+  --link: var(--accent-text);
+  --link-hover: var(--accent-hover);
+
+  --input-bg: var(--well);
+  --input-text: var(--text);
+  --input-placeholder: var(--text-3);
+
+  --scrollbar-thumb: var(--fill-3);
+  --scrollbar-thumb-hover: var(--fill-4);
+
+  --btn-secondary-bg: var(--fill-3);
+
+  /* Kommentararten der Mitarbeiterakte */
+  --comment-bg: var(--fill-2);
+  --comment-text: var(--text-2);
+  --comment-note-bg: var(--fill-3);
+  --comment-note-stripe: var(--text-3);
+  --comment-positive-bg: rgba(var(--ok-rgb), 0.1);
+  --comment-positive-stripe: var(--ok);
+  --comment-negative-bg: rgba(var(--danger-rgb), 0.1);
+  --comment-negative-stripe: var(--danger);
+  --comment-rank-bg: rgba(var(--info-rgb), 0.1);
+  --comment-rank-stripe: var(--info);
+  --comment-modify-bg: rgba(var(--warn-rgb), 0.1);
+  --comment-modify-stripe: var(--warn);
+  --comment-document-bg: rgba(253, 73, 208, 0.1);
+  --comment-document-stripe: #fd49d0;
+  --comment-created-bg: rgba(20, 163, 161, 0.1);
+  --comment-created-stripe: #14a3a1;
+
+  /* Radien (Alt --radius-1…4), Schatten, Bewegung */
+  --radius-1: 6px;
+  --radius-2: 10px;
+  --radius-3: 16px;
+  --radius-4: 22px;
+  --radius-item: 12px;
+  --radius-sm: var(--radius-1);
+  --radius: var(--radius-2);
+  --radius-md: var(--radius-2);
+  --radius-lg: var(--radius-3);
+  --radius-xl: var(--radius-4);
+  --shadow-card: inset 0 1px 0 var(--hi), 0 1px 2px var(--shade);
+  --shadow-pop: inset 0 1px 0 var(--hi), 0 0 0 1px var(--hairline), 0 8px 24px -4px var(--shade-pop);
+  --shadow-glow: inset 0 1px 0 var(--btn-hi), inset 0 -1px 0 var(--btn-lo), 0 0 0 1px var(--accent-line), 0 6px 18px -6px var(--accent-glow);
+  --shadow-glow-hover: inset 0 1px 0 var(--btn-hi), inset 0 -1px 0 var(--btn-lo), 0 0 0 1px var(--accent-line), 0 8px 28px -6px var(--accent-glow);
+  --shadow: var(--shadow-card);
+  --shadow-lg: var(--shadow-pop);
+  --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-spring: cubic-bezier(0.34, 1.45, 0.55, 1);
+  --ease: var(--motion-ease);
+  --ease-out-quint: var(--motion-ease);
+  --ease-out-expo: var(--motion-ease);
+  --spring: var(--motion-spring);
+  --spring-gentle: var(--motion-spring);
+  --fs-xs: 0.72rem;
+  --fs-sm: 0.78rem;
+  --fs-base: 0.82rem;
+  --fs-md: 0.88rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+
+  /* Maße: Bedienelemente und Hülle */
+  --control-h: 40px;
+  --sidebar-inset: 12px;
+  --sidebar-w: 256px;
+  --sidebar-w-collapsed: 56px;
+  --topbar-h: 56px;
+
+  /* Rauschen auf Seite und Topbar (Alt --canvas-layers, SVG-Filter als Daten-URL, 103-tauglich). */
+  --canvas-layers: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --canvas-layers: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  --bg: #edeef2;
+  --bg-2: #f7f8fa;
+  --surface: #f7f8fa;
+  --surface-2: #ffffff;
+  --surface-3: #ffffff;
+  --surface-4: #edeef2;
+  --well: #f4f6f8;
+  --well-deep: #e6e8eb;
+  --overlay: #ffffff;
+  --kbd: #e3e4e8;
+  --bezel-rim: #ebedf0;
+  --track: var(--well);
+  --border: #e0e1e4;
+  --border-control: #ccced2;
+  --border-ui: #87898e;
+  --border-strong: #72747b;
+
+  --hi: rgba(255, 255, 255, 0.9);
+  --shade: rgba(29, 34, 43, 0.14);
+  --shade-pop: rgba(29, 34, 43, 0.18);
+  --hairline: rgba(0, 0, 0, 0.08);
+  --hairline-strong: rgba(0, 0, 0, 0.14);
+  --well-ring: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  --tick-empty: rgba(0, 0, 0, 0.07);
+  --series-1: #008aa3; /* oklch(58% .11 215) */
+  --edge-top: rgba(0, 0, 0, 0.05);
+  --edge-bottom: rgba(0, 0, 0, 0.12);
+  --btn-hi: rgba(255, 255, 255, 0.25);
+  --btn-lo: rgba(0, 0, 0, 0.12);
+
+  --fill-1: rgba(0, 0, 0, 0.025);
+  --fill-2: rgba(0, 0, 0, 0.05);
+  --fill-3: rgba(0, 0, 0, 0.08);
+  --fill-4: rgba(0, 0, 0, 0.14);
+  --fill-5: rgba(0, 0, 0, 0.3);
+
+  --text: #16181e;
+  --text-2: #4a4d53;
+  --text-3: #63666c;
+  --text-disabled: #96989d;
+
+  --accent-text: #c04008;
+  --accent-soft: rgba(var(--accent-rgb), 0.12);
+  --accent-line: rgba(var(--accent-rgb), 0.3);
+  --accent-glow: rgba(var(--accent-rgb), 0.3);
+
+  /* -soft/-line = 12/30 % auf --surface-2 */
+  --ok: #008942;
+  --ok-rgb: 0, 137, 66;
+  --ok-text: #006731;
+  --ok-soft: #e5f1e7;
+  --ok-line: #bfdcc4;
+  --warn: #c17a00;
+  --warn-rgb: 193, 122, 0;
+  --warn-text: #874e00;
+  --warn-soft: #f8efe5;
+  --warn-line: #eed7be;
+  --danger: #d01c29;
+  --danger-rgb: 208, 28, 41;
+  --danger-text: #b01e25;
+  --danger-soft: #fee7e5;
+  --danger-line: #fac3be;
+  --info: #007cbd;
+  --info-rgb: 0, 124, 189;
+  --info-text: #005f9e;
+  --info-soft: #e5eff8;
+  --info-line: #bed8ed;
+  --cal-purple: #7c4dcc;
+
+  --comment-document-bg: rgba(192, 38, 211, 0.1);
+  --comment-document-stripe: #c026d3;
+  --comment-created-bg: rgba(15, 118, 110, 0.1);
+  --comment-created-stripe: #0f766e;
+}
+
+/* ---------- classic: der bisherige Satz (bf0a772) für die Tablet-Seiten, 1:1 ---------- */
+/* Muss nach den core-Blöcken stehen: bei classic + hell gewinnt sonst :root[data-theme="light"] */
+/* (gleiche Spezifität) für Namen, die nur der dunkle classic-Block setzt. */
+/* Entfallen: die ungenutzten --btn-{primary,success,danger,warning}-*-Stufen (color-mix). */
+
+:root[data-skin="classic"] {
+  color-scheme: dark;
+
+  --bg: #0b0b0b;
+  --bg-2: #101010;
+  --surface: #151515;
+  --surface-2: #1b1b1b;
+  --surface-3: #222222;
+  --border: #272727;
+  --border-strong: #363636;
+
+  --fill-1: rgba(255, 255, 255, 0.03);
+  --fill-2: rgba(255, 255, 255, 0.06);
+  --fill-3: rgba(255, 255, 255, 0.1);
+  --fill-4: rgba(255, 255, 255, 0.18);
+  --fill-5: rgba(255, 255, 255, 0.35);
+
+  --text: #ebe9e6;
+  --text-2: #b7b4b0;
+  --text-3: #817d78;
+  --white: #fff;
+  --black: #000;
+
+  --accent: #f0500a;
+  --accent-hover: #d84507;
+  --accent-rgb: 240, 80, 10;
+  --accent-soft: rgba(var(--accent-rgb), 0.16);
+  --on-accent: #fff7f2;
+
+  --ok: #3fb950;
+  --ok-rgb: 63, 185, 80;
+  --ok-soft: rgba(var(--ok-rgb), 0.14);
+  --warn: #d29922;
+  --warn-rgb: 210, 153, 34;
+  --warn-soft: rgba(var(--warn-rgb), 0.16);
+  --danger: #e5534b;
+  --danger-rgb: 229, 83, 75;
+  --danger-soft: rgba(var(--danger-rgb), 0.14);
+  --info: #58a6ff;
+  --info-rgb: 88, 166, 255;
+  --info-soft: rgba(var(--info-rgb), 0.14);
+  --cal-purple: #a371f7;
+
+  --link: var(--accent);
+  --link-hover: var(--accent-hover);
+
+  --input-bg: var(--bg-2);
+  --input-text: var(--text);
+  --input-placeholder: var(--text-3);
+
+  --scrollbar-thumb: var(--fill-3);
+  --scrollbar-thumb-hover: var(--fill-4);
+
+  --btn-secondary-bg: var(--fill-3);
+
+  --comment-bg: var(--fill-2);
+  --comment-text: var(--text-2);
+  --comment-note-bg: var(--fill-3);
+  --comment-note-stripe: var(--text-3);
+  --comment-positive-bg: rgba(var(--ok-rgb), 0.1);
+  --comment-positive-stripe: var(--ok);
+  --comment-negative-bg: rgba(var(--danger-rgb), 0.1);
+  --comment-negative-stripe: var(--danger);
+  --comment-rank-bg: rgba(var(--info-rgb), 0.1);
+  --comment-rank-stripe: var(--info);
+  --comment-modify-bg: rgba(var(--warn-rgb), 0.1);
+  --comment-modify-stripe: var(--warn);
+  --comment-document-bg: rgba(253, 73, 208, 0.1);
+  --comment-document-stripe: #fd49d0;
+  --comment-created-bg: rgba(20, 163, 161, 0.1);
+  --comment-created-stripe: #14a3a1;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-md: var(--radius);
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+  --radius-1: var(--radius-sm);
+  --radius-2: var(--radius);
+  --radius-3: var(--radius-lg);
+  --shadow-card: var(--shadow);
+  --shadow-pop: var(--shadow-lg);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --spring-gentle: cubic-bezier(0.22, 1.2, 0.36, 1);
+  --content-text: var(--text);
+  --accent-fill: var(--accent);
+  --accent-base: var(--accent);
+  --motion-ease: var(--ease);
+  --motion-spring: var(--spring);
+  --secondary-text: var(--text-2);
+  --tertiary-text: var(--text-3);
+  --overlay: var(--surface);
+  --border-subtle: var(--border);
+  --border-control: var(--border);
+  --canvas: var(--bg);
+  --canvas-layers: none;
+  --sidebar-inset: 0px;
+  --fs-xs: 0.72rem;
+  --fs-sm: 0.78rem;
+  --fs-base: 0.82rem;
+  --fs-md: 0.88rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+
+  --control-h: 36px;
+  --sidebar-w: 240px;
+  --sidebar-w-collapsed: 64px;
+  --topbar-h: 48px;
+
+  /* shadcn-Aliase wie bisher in app.css */
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface);
+  --popover-foreground: var(--text);
+  --primary: var(--accent);
+  --primary-foreground: var(--on-accent);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--text);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--text-3);
+  --accent-foreground: var(--text);
+  --destructive: var(--danger);
+  --input: var(--border);
+  --ring: var(--accent);
+}
+
+:root[data-skin="classic"][data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f5f4f2;
+  --bg-2: #edecea;
+  --surface: #ffffff;
+  --surface-2: #f8f7f5;
+  --surface-3: #efeeeb;
+  --border: #dedcd8;
+  --border-strong: #cbc8c3;
+
+  --fill-1: rgba(20, 20, 20, 0.03);
+  --fill-2: rgba(20, 20, 20, 0.05);
+  --fill-3: rgba(20, 20, 20, 0.08);
+  --fill-4: rgba(20, 20, 20, 0.14);
+  --fill-5: rgba(20, 20, 20, 0.28);
+
+  --text: #1a1917;
+  --text-2: #4a4845;
+  --text-3: #7d7a75;
+
+  --accent: #cc3f00;
+  --accent-hover: #b03600;
+  --accent-rgb: 204, 63, 0;
+  --accent-soft: rgba(var(--accent-rgb), 0.1);
+  --on-accent: #ffffff;
+
+  --ok: #1f8a3b;
+  --ok-rgb: 31, 138, 59;
+  --ok-soft: rgba(var(--ok-rgb), 0.12);
+  --warn: #9a6a00;
+  --warn-rgb: 154, 106, 0;
+  --warn-soft: rgba(var(--warn-rgb), 0.12);
+  --danger: #c93a32;
+  --danger-rgb: 201, 58, 50;
+  --danger-soft: rgba(var(--danger-rgb), 0.1);
+  --info: #1f6fd0;
+  --info-rgb: 31, 111, 208;
+  --info-soft: rgba(var(--info-rgb), 0.1);
+  --cal-purple: #7c4dcc;
+
+  --comment-document-bg: rgba(192, 38, 211, 0.1);
+  --comment-document-stripe: #c026d3;
+  --comment-created-bg: rgba(15, 118, 110, 0.1);
+  --comment-created-stripe: #0f766e;
+
+  --shadow: 0 2px 8px rgba(20, 20, 20, 0.1);
+  --shadow-lg: 0 8px 24px rgba(20, 20, 20, 0.16);
+}

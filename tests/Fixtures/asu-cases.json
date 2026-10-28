@@ -1,0 +1,1843 @@
+{
+  "_doc": "Shared AsuState cases (legacy firetab-asu-state.test.mjs L01-L11 + edge cases E1-E5). Times: ms since epoch. expect keys are dot paths into the derived state; numbers compare with |a-b| <= 1e-6, everything else exactly.",
+  "cases": [
+    {
+      "name": "L01a not connected waits for anschliessen",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [],
+      "now": 1791720120000,
+      "config": {},
+      "expect": {
+        "phase": "bereit",
+        "tone": "idle",
+        "nextAction": "anschliessen"
+      }
+    },
+    {
+      "name": "L01b sicherheit team is ready",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "sicherheit",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [],
+      "now": 1791720120000,
+      "config": {},
+      "expect": {
+        "tone": "ready"
+      }
+    },
+    {
+      "name": "L02 retreat pressure is twice the air used on the way in",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 2,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 3,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721164000,
+      "config": {},
+      "expect": {
+        "phase": "ziel",
+        "retreatBar": 140,
+        "lowest.name": "Weber",
+        "lowest.bar": 188,
+        "rate": 5.5,
+        "restMin": 7,
+        "restSource": "druck",
+        "restByClock": 13,
+        "askMin": 3,
+        "askKind": "2/3",
+        "tone": "go",
+        "nextAsk.type": "hinweis_23",
+        "nextAsk.at": 1791721320000
+      }
+    },
+    {
+      "name": "L03a without consumption the clock counts",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 1,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 240,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791720660000,
+      "config": {},
+      "expect": {
+        "rate": null,
+        "restMin": 21,
+        "restSource": "uhr"
+      }
+    },
+    {
+      "name": "L03b configured consumption is used",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 1,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 240,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791720660000,
+      "config": {
+        "consumption": 8
+      },
+      "expect": {
+        "rateSource": "angenommen",
+        "retreatBar": 120,
+        "retreatAt": 1791721470000
+      }
+    },
+    {
+      "name": "L03c measured rate wins over configured",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 2,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 3,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721140000,
+      "config": {
+        "consumption": 8
+      },
+      "expect": {
+        "rateSource": "gemessen",
+        "rate": 5.5
+      }
+    },
+    {
+      "name": "L04 unacknowledged third is due",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 1,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 3,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721164000,
+      "config": {},
+      "expect": {
+        "askDue": true,
+        "nextAsk.type": "hinweis_13",
+        "tone": "due"
+      }
+    },
+    {
+      "name": "L05 lowest member below retreat pressure is alarm",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 3,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 8,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "druck",
+          "at": 1791721260000,
+          "member_id": 2,
+          "bar": 138,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721290000,
+      "config": {},
+      "expect": {
+        "lowest.name": "Krause",
+        "belowRetreat": true,
+        "tone": "alarm"
+      }
+    },
+    {
+      "name": "L06 passed forecast retreat time is alarm",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 3,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 8,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "hinweis_23",
+          "at": 1791721320000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721740000,
+      "config": {},
+      "expect": {
+        "retreatOverdue": true,
+        "tone": "alarm"
+      }
+    },
+    {
+      "name": "L07 voided events do not count",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 2,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 3,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": true
+        },
+        {
+          "id": 5,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721140000,
+      "config": {},
+      "expect": {
+        "phase": "vorgehen",
+        "retreatBar": null,
+        "nextAction": "ziel"
+      }
+    },
+    {
+      "name": "L08a retreat is back",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 3,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 8,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "rueckzug",
+          "at": 1791721200000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721260000,
+      "config": {},
+      "expect": {
+        "tone": "back",
+        "nextAction": "draussen"
+      }
+    },
+    {
+      "name": "L08b asks do not count on the way back",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 3,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 8,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "rueckzug",
+          "at": 1791721200000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721380000,
+      "config": {},
+      "expect": {
+        "askDue": false,
+        "tone": "back"
+      }
+    },
+    {
+      "name": "L08c outside stops the clock",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 3,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 8,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "rueckzug",
+          "at": 1791721200000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "draussen",
+          "at": 1791721620000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791722520000,
+      "config": {},
+      "expect": {
+        "tone": "done",
+        "elapsedMs": 1500000,
+        "askDue": false
+      }
+    },
+    {
+      "name": "L09a mayday wins",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 2,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 3,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "mayday",
+          "at": 1791721260000,
+          "member_id": null,
+          "bar": null,
+          "note": "{\"member\":\"Krause\",\"standort\":\"1. OG\",\"lage\":\"eingeklemmt\"}",
+          "voided": false
+        }
+      ],
+      "now": 1791721290000,
+      "config": {},
+      "expect": {
+        "tone": "mayday",
+        "mayday": {
+          "at": 1791721260000,
+          "member": "Krause",
+          "standort": "1. OG",
+          "lage": "eingeklemmt"
+        }
+      }
+    },
+    {
+      "name": "L09b mayday_ende ends it",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 3,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 8,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "mayday",
+          "at": 1791721260000,
+          "member_id": null,
+          "bar": null,
+          "note": "{\"member\":\"Krause\",\"standort\":\"1. OG\",\"lage\":\"eingeklemmt\"}",
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "mayday_ende",
+          "at": 1791721440000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721500000,
+      "config": {},
+      "expect": {
+        "mayday": null,
+        "tone": "due"
+      }
+    },
+    {
+      "name": "L10 running past the expected time is flagged",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 1,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 3,
+          "type": "hinweis_23",
+          "at": 1791721320000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721980000,
+      "config": {},
+      "expect": {
+        "overtime": true,
+        "tone": "due"
+      }
+    },
+    {
+      "name": "L11a idle columns are numbers",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [],
+      "now": 1791720120000,
+      "config": {},
+      "expect": {
+        "restMin": 30,
+        "askMin": 10,
+        "askKind": "erst"
+      }
+    },
+    {
+      "name": "L11b due ask is zero",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 1,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 3,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721164000,
+      "config": {},
+      "expect": {
+        "askMin": 0
+      }
+    },
+    {
+      "name": "L11c after both asks minutes since last report",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 3,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 8,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "hinweis_23",
+          "at": 1791721320000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721560000,
+      "config": {},
+      "expect": {
+        "askKind": "seit",
+        "askMin": 4
+      }
+    },
+    {
+      "name": "L11d below retreat rest is zero by pressure",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 3,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 8,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "hinweis_13",
+          "at": 1791720720000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "druck",
+          "at": 1791721260000,
+          "member_id": 2,
+          "bar": 138,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791721290000,
+      "config": {},
+      "expect": {
+        "restMin": 0,
+        "restSource": "druck"
+      }
+    },
+    {
+      "name": "E1 voided first event: the next live one of that type counts",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 1,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 280,
+          "note": null,
+          "voided": true
+        },
+        {
+          "id": 2,
+          "type": "angeschlossen",
+          "at": 1791720180000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791720240000,
+      "config": {},
+      "expect": {
+        "phase": "vorgehen",
+        "startAt": 1791720180000,
+        "startBar": 300,
+        "elapsedMs": 60000
+      }
+    },
+    {
+      "name": "E2 mayday wins over done",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 3,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 4,
+          "type": "druck",
+          "at": 1791720600000,
+          "member_id": 1,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 230,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 6,
+          "type": "druck",
+          "at": 1791720840000,
+          "member_id": 1,
+          "bar": 210,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 7,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 1,
+          "bar": 188,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 8,
+          "type": "druck",
+          "at": 1791721080000,
+          "member_id": 2,
+          "bar": 196,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "draussen",
+          "at": 1791721320000,
+          "member_id": null,
+          "bar": null,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "mayday",
+          "at": 1791721380000,
+          "member_id": null,
+          "bar": null,
+          "note": "Person vermisst",
+          "voided": false
+        }
+      ],
+      "now": 1791721440000,
+      "config": {},
+      "expect": {
+        "phase": "draussen",
+        "tone": "mayday",
+        "mayday": {
+          "at": 1791721380000,
+          "member": "",
+          "standort": "",
+          "lage": "Person vermisst"
+        }
+      }
+    },
+    {
+      "name": "E3 equal timestamps are ordered by id",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 5,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 250,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 1,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 3,
+          "type": "ziel",
+          "at": 1791720600000,
+          "member_id": null,
+          "bar": 240,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791720660000,
+      "config": {},
+      "expect": {
+        "zielAt": 1791720600000,
+        "zielBar": 240,
+        "retreatBar": 120
+      }
+    },
+    {
+      "name": "E4 readings under 30 s apart fall back to configured consumption",
+      "trupp": {
+        "expected_minutes": 30,
+        "role": "angriff",
+        "members": [
+          {
+            "id": 1,
+            "position": "tf",
+            "name": "Weber"
+          },
+          {
+            "id": 2,
+            "position": "tm1",
+            "name": "Krause"
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": 1,
+          "type": "angeschlossen",
+          "at": 1791720120000,
+          "member_id": null,
+          "bar": 300,
+          "note": null,
+          "voided": false
+        },
+        {
+          "id": 2,
+          "type": "druck",
+          "at": 1791720140000,
+          "member_id": 1,
+          "bar": 290,
+          "note": null,
+          "voided": false
+        }
+      ],
+      "now": 1791720180000,
+      "config": {
+        "consumption": 10
+      },
+      "expect": {
+        "rate": 10,
+        "rateSource": "angenommen",
+        "lowest.bar": 290
+      }
+    },
+    {
+      "name": "E5 no events and no expected time default to 30 min",
+      "trupp": {
+        "expected_minutes": null,
+        "role": "angriff",
+        "members": []
+      },
+      "events": [],
+      "now": 1791720120000,
+      "config": {},
+      "expect": {
+        "expectedMs": 1800000,
+        "elapsedMs": 0,
+        "restMin": 30,
+        "askMin": 10,
+        "startBar": null,
+        "lowest": null,
+        "mayday": null,
+        "lastReportAt": null
+      }
+    }
+  ]
+}

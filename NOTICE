@@ -1,0 +1,9 @@
+Ignis (Laravel) - ignis_laravel
+
+This project is a derived work (rewrite) of the following projects and is
+licensed under the GNU General Public License v3.0 or later (GPL-3.0-or-later);
+see LICENSE.
+
+- intraRP (original project): https://github.com/intraRP/intraRP
+- intra.stettbeck.de (predecessor) by itshypax: https://github.com/itshypax/intra.stettbeck.de
+- ignis (continuation of intraRP) by EmergencyForge: https://github.com/EmergencyForge/ignis

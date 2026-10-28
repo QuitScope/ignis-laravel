@@ -1,0 +1,77 @@
+name: Release
+
+# Tag v1.2.3 -> release archive + Docker image (GHCR) + DRAFT GitHub release.
+# This workflow does NOT sign: the private key stays with the operator, who adds manifest.json and
+# manifest.json.sig to the draft and publishes it.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Version from tag
+        id: v
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          semver='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'
+          if ! [[ "$version" =~ $semver ]]; then echo "tag $GITHUB_REF_NAME is not v<SemVer>" >&2; exit 1; fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_mysql, pdo_sqlite, gd, intl, zip
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: composer install --no-dev -o --no-interaction --prefer-dist
+      - run: npm ci && npm run build
+      - name: Build archive
+        env:
+          VERSION: ${{ steps.v.outputs.version }}
+        run: php tools/release/build-archive.php "$VERSION" --out=dist
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.v.outputs.image }}:${{ steps.v.outputs.version }}
+          build-args: IGNIS_VERSION=${{ steps.v.outputs.version }}
+      - name: Draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IMAGE: ${{ steps.v.outputs.image }}
+          DIGEST: ${{ steps.push.outputs.digest }}
+          VERSION: ${{ steps.v.outputs.version }}
+        run: |
+          cat > notes.md <<EOF
+          Version ${VERSION}
+
+          Image: \`${IMAGE}\`
+          Image digest: \`${DIGEST}\`
+
+          Draft: the operator signs the archive locally and adds manifest.json and manifest.json.sig before publishing.
+          EOF
+          flags=""
+          case "$VERSION" in *-*) flags="--prerelease" ;; esac
+          gh release create "$GITHUB_REF_NAME" "dist/ignis-${VERSION}.zip" --draft $flags --title "$GITHUB_REF_NAME" --notes-file notes.md

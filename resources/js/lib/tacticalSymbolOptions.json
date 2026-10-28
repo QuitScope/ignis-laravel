@@ -1,0 +1,356 @@
+{
+  "grundzeichen": [
+    {
+      "value": "abrollbehaelter",
+      "label": "Abrollbehälter"
+    },
+    {
+      "value": "amphibienfahrzeug",
+      "label": "Amphibienfahrzeug"
+    },
+    {
+      "value": "anhaenger",
+      "label": "Anhänger allgemein"
+    },
+    {
+      "value": "anhaenger-lkw",
+      "label": "Anhänger von Lkw gezogen"
+    },
+    {
+      "value": "anhaenger-pkw",
+      "label": "Anhänger von Pkw gezogen"
+    },
+    {
+      "value": "anlass",
+      "label": "Anlass, Ereignis"
+    },
+    {
+      "value": "befehlsstelle",
+      "label": "Befehlsstelle"
+    },
+    {
+      "value": "fahrzeug",
+      "label": "Fahrzeug"
+    },
+    {
+      "value": "flugzeug",
+      "label": "Flugzeug"
+    },
+    {
+      "value": "gebaeude",
+      "label": "Gebäude"
+    },
+    {
+      "value": "gefahr",
+      "label": "Gefahr"
+    },
+    {
+      "value": "gefahr-akut",
+      "label": "Gefahr (akut)"
+    },
+    {
+      "value": "gefahr-vermutet",
+      "label": "Gefahr (vermutet)"
+    },
+    {
+      "value": "hubschrauber",
+      "label": "Hubschrauber"
+    },
+    {
+      "value": "ohne",
+      "label": "Kein Grundzeichen"
+    },
+    {
+      "value": "kettenfahrzeug",
+      "label": "Kettenfahrzeug"
+    },
+    {
+      "value": "kraftfahrzeug-gelaendegaengig",
+      "label": "Kraftfahrzeug geländegängig"
+    },
+    {
+      "value": "kraftfahrzeug-landgebunden",
+      "label": "Kraftfahrzeug landgebunden"
+    },
+    {
+      "value": "massnahme",
+      "label": "Maßnahme"
+    },
+    {
+      "value": "person",
+      "label": "Person"
+    },
+    {
+      "value": "rollcontainer",
+      "label": "Rollcontainer"
+    },
+    {
+      "value": "schienenfahrzeug",
+      "label": "Schienenfahrzeug"
+    },
+    {
+      "value": "stelle",
+      "label": "Stelle, Einrichtung"
+    },
+    {
+      "value": "ortsfeste-stelle",
+      "label": "Stelle, Einrichtung (ortsfest)"
+    },
+    {
+      "value": "taktische-formation",
+      "label": "Taktische Formation"
+    },
+    {
+      "value": "wasserfahrzeug",
+      "label": "Wasserfahrzeug"
+    },
+    {
+      "value": "wechselbehaelter",
+      "label": "Wechselbehälter/Container"
+    },
+    {
+      "value": "zweirad",
+      "label": "Zweirad, Kraftrad"
+    }
+  ],
+  "organisation": [
+    {
+      "value": "bundeswehr",
+      "label": "Bundeswehr"
+    },
+    {
+      "value": "feuerwehr",
+      "label": "Feuerwehr"
+    },
+    {
+      "value": "fuehrung",
+      "label": "Führung"
+    },
+    {
+      "value": "gefahrenabwehr",
+      "label": "Gefahrenabwehr"
+    },
+    {
+      "value": "hilfsorganisation",
+      "label": "Hilfsorganisationen"
+    },
+    {
+      "value": "polizei",
+      "label": "Polizei"
+    },
+    {
+      "value": "thw",
+      "label": "THW"
+    },
+    {
+      "value": "zivil",
+      "label": "Zivile Einheiten"
+    }
+  ],
+  "fachaufgabe": [
+    {
+      "value": "abwehr-wassergefahren",
+      "label": "Abwehr von Wassergefahren"
+    },
+    {
+      "value": "aerztliche-versorgung",
+      "label": "Ärztliche Versorgung"
+    },
+    {
+      "value": "beleuchtung",
+      "label": "Beleuchtung"
+    },
+    {
+      "value": "bergung",
+      "label": "Bergung"
+    },
+    {
+      "value": "umweltschaeden-gewaesser",
+      "label": "Beseitigung von Umweltschäden auf Gewässern"
+    },
+    {
+      "value": "betreuung",
+      "label": "Betreuung"
+    },
+    {
+      "value": "brandbekaempfung",
+      "label": "Brandbekämpfung"
+    },
+    {
+      "value": "dekontamination",
+      "label": "Dekontamination"
+    },
+    {
+      "value": "dekontamination-geraete",
+      "label": "Dekontamination Geräte"
+    },
+    {
+      "value": "dekontamination-personen",
+      "label": "Dekontamination Personen"
+    },
+    {
+      "value": "wasserfahrzeuge",
+      "label": "Einsatz von Wasserfahrzeugen"
+    },
+    {
+      "value": "einsatzeinheit",
+      "label": "Einsatzeinheit"
+    },
+    {
+      "value": "entschaerfen",
+      "label": "Entschärfung, Kampfmittelräumung"
+    },
+    {
+      "value": "erkundung",
+      "label": "Erkundung"
+    },
+    {
+      "value": "fuehrung",
+      "label": "Führung, Leitung, Stab"
+    },
+    {
+      "value": "abc",
+      "label": "Gefahrenabwehr bei Gefährlichen Stoffen (ABC)"
+    },
+    {
+      "value": "heben",
+      "label": "Heben von Lasten"
+    },
+    {
+      "value": "iuk",
+      "label": "Information und Kommunikation"
+    },
+    {
+      "value": "instandhaltung",
+      "label": "Instandhaltung"
+    },
+    {
+      "value": "krankenhaus",
+      "label": "Krankenhaus"
+    },
+    {
+      "value": "messen",
+      "label": "Messen, Spüren"
+    },
+    {
+      "value": "pumpen",
+      "label": "Pumpen, Lenzen"
+    },
+    {
+      "value": "raeumen",
+      "label": "Räumen, Beseitigung von Hindernissen"
+    },
+    {
+      "value": "hoehenrettung",
+      "label": "Rettung aus Höhen und Tiefen"
+    },
+    {
+      "value": "rettungswesen",
+      "label": "Rettungswesen, Sanitätswesen"
+    },
+    {
+      "value": "schlachten",
+      "label": "Schlachten"
+    },
+    {
+      "value": "seelsorge",
+      "label": "Seelsorge"
+    },
+    {
+      "value": "sprengen",
+      "label": "Sprengen"
+    },
+    {
+      "value": "rettungshunde",
+      "label": "Suchen und Orten mit Rettungshunden"
+    },
+    {
+      "value": "technische-hilfeleistung",
+      "label": "Technische Hilfeleistung"
+    },
+    {
+      "value": "transport",
+      "label": "Transport"
+    },
+    {
+      "value": "unterbringung",
+      "label": "Unterbringung"
+    },
+    {
+      "value": "verpflegung",
+      "label": "Verpflegung"
+    },
+    {
+      "value": "wasserversorgung",
+      "label": "Wasserversorgung"
+    }
+  ],
+  "einheit": [
+    {
+      "value": "trupp",
+      "label": "Trupp"
+    },
+    {
+      "value": "staffel",
+      "label": "Staffel"
+    },
+    {
+      "value": "gruppe",
+      "label": "Gruppe"
+    },
+    {
+      "value": "zug",
+      "label": "Zug"
+    },
+    {
+      "value": "bereitschaft",
+      "label": "Bereitschaft"
+    }
+  ],
+  "symbol": [
+    {
+      "value": "abc",
+      "label": "ABC"
+    },
+    {
+      "value": "drehleiter",
+      "label": "Drehleiter"
+    },
+    {
+      "value": "person-gerettet",
+      "label": "Person gerettet"
+    },
+    {
+      "value": "person-tot",
+      "label": "Person tot"
+    },
+    {
+      "value": "person-verletzt",
+      "label": "Person verletzt"
+    },
+    {
+      "value": "person-vermisst",
+      "label": "Person vermisst"
+    },
+    {
+      "value": "sammeln",
+      "label": "Sammeln"
+    },
+    {
+      "value": "sammelplatz-betroffene",
+      "label": "Sammelplatz Betroffene"
+    },
+    {
+      "value": "vollbrand",
+      "label": "Vollbrand"
+    },
+    {
+      "value": "wasser",
+      "label": "Wasser"
+    },
+    {
+      "value": "zerstoert",
+      "label": "Zerstört"
+    }
+  ]
+}

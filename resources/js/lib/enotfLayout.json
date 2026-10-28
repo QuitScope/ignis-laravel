@@ -1,0 +1,98 @@
+{
+    "pages": [
+        {
+            "slug": "rettdaten",
+            "label": "enotf.ui.nav.rettdaten",
+            "keys": [
+                "pat_vorname", "pat_nachname", "patsex", "patgebdat",
+                "edatum", "ezeit", "transportziel", "eart",
+                "transp_poi", "transp_adresse", "sonderrechte_anfahrt", "ziel_poi", "ziel_adresse", "sonderrechte_transport",
+                "salarm", "s3", "s4", "spat", "s7", "s8", "s1", "s2", "sende"
+            ]
+        },
+        {
+            "slug": "erstbefund",
+            "label": "enotf.ui.nav.erstbefund",
+            "keys": [
+                "awfrei_1", "zyanose_1",
+                "b_symptome", "b_auskult",
+                "c_kreislauf", "c_rekap", "c_puls_reg", "c_puls_rad", "c_blutung",
+                "d_bewusstsein", "d_ex_1", "d_pupillenw_1", "d_pupillenw_2", "d_lichtreakt_1", "d_lichtreakt_2", "d_gcs_1", "d_gcs_2", "d_gcs_3",
+                "v_muster_k", "v_muster_k1", "v_muster_t", "v_muster_t1", "v_muster_a", "v_muster_a1",
+                "v_muster_al", "v_muster_al1", "v_muster_bl", "v_muster_bl1", "v_muster_w", "v_muster_w1",
+                "sz_nrs", "sz_toleranz_1",
+                "c_ekg", "psych",
+                "spo2", "atemfreq", "etco2", "herzfreq", "rrsys", "rrdias", "bz", "temp"
+            ]
+        },
+        {
+            "slug": "anamnese",
+            "label": "enotf.ui.nav.anamnese",
+            "keys": [
+                "anmerkungen",
+                "symptombeginn_datum", "symptombeginn_zeit", "symptombeginn_geschaetzt", "symptombeginn_nf",
+                "naca_initial", "naca_uebergabe", "az_vor_ereignis", "elokation"
+            ]
+        },
+        {
+            "slug": "diagnose",
+            "label": "enotf.ui.nav.diagnose",
+            "keys": ["diagnose_haupt", "diagnose_weitere", "diagnose"]
+        },
+        {
+            "slug": "verlauf",
+            "label": "enotf.ui.nav.verlauf",
+            "keys": []
+        },
+        {
+            "slug": "massnahmen",
+            "label": "enotf.ui.nav.massnahmen",
+            "keys": [
+                "awsicherung_1", "awsicherung_2", "entlastungspunktion", "hws_immo", "awsicherung_neu",
+                "b_beatmung", "o2gabe",
+                "c_zugang",
+                "medis", "medis_keine",
+                "lagerung", "rettungstechnik", "waerme_passiv", "e_reposition", "e_verband",
+                "waerme_aktiv", "e_krintervention", "e_kuehlung", "e_narkose", "e_tourniquet", "e_cpr"
+            ]
+        },
+        {
+            "slug": "abschluss",
+            "label": "enotf.ui.nav.abschluss",
+            "keys": [
+                "fzg_transp", "fzg_na", "fzg_sonst", "pfname", "prot_by",
+                "ebesonderheiten", "na_nachf",
+                "rea_status", "rea_ursache", "rea_sport", "rea_fr_eintreffen", "rea_kollaps", "rea_hdm_durch", "rea_hdm_zeit",
+                "rea_defi", "rea_rosc", "rea_kh_aufnahme", "rea_tod_zeit", "rea_erfolglos", "rea_details",
+                "uebergabe_ort", "uebergabe_an"
+            ]
+        }
+    ],
+    "pseudo": ["medis", "rea_details"],
+    "unplaced": {},
+    "diagnose_tree": [
+        { "label": "ZNS", "cols": [[1, 2, 3, 4, 5, 6, 9]] },
+        { "label": "Herz-Kreislauf", "cols": [[11, 12, 13, 14, 15, 16, 17, 18, 19, 20], [21, 22, 23, 24, 25, 26, 27, 28, 29]] },
+        { "label": "Atemwege", "cols": [[31, 32, 33, 34, 35, 36, 37, 38, 39, 49]] },
+        { "label": "Abdomen", "cols": [[51, 52, 53, 54, 55, 56, 59]] },
+        { "label": "Psychiatrie", "cols": [[61, 62, 63, 64, 65, 66, 67, 69]] },
+        { "label": "Stoffwechsel", "cols": [[71, 72, 73, 74, 75, 79]] },
+        { "label": "Sonstige", "cols": [[81, 82, 83, 84, 85, 86, 87, 88, 89], [91, 92, 93, 94, 99]] },
+        {
+            "label": "Trauma",
+            "subs": [
+                { "label": "Schädel-Hirn", "codes": [101, 102, 103, 104] },
+                { "label": "Gesicht", "codes": [111, 112, 113, 114] },
+                { "label": "HWS", "codes": [121, 122, 123, 124] },
+                { "label": "Thorax", "codes": [131, 132, 133, 134] },
+                { "label": "Abdomen", "codes": [141, 142, 143, 144] },
+                { "label": "BWS / LWS", "codes": [151, 152, 153] },
+                { "label": "Becken", "codes": [161, 162, 163] },
+                { "label": "obere Extremitäten", "codes": [171, 172, 173] },
+                { "label": "untere Extremitäten", "codes": [181, 182, 183] },
+                { "label": "Weichteile", "codes": [191, 192, 193] },
+                { "label": "spezielle", "codes": [201, 202, 203, 204, 205, 206, 209] }
+            ]
+        }
+    ]
+}

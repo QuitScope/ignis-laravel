@@ -1,0 +1,2064 @@
+/* Skin `core`: Regeln aus dem Altsystem (ignis/public/assets/dist/ui.css, body[data-ui-skin=core]), */
+/* Klassennamen wie dort. Nur Token-Werte, keine oklch()/color-mix()/:has()/@container (Chromium 103, */
+/* tests/js/cefCss.test.ts). Tablet-Seiten (data-skin="classic") sind ausgenommen. */
+/* In @layer components, damit Tailwind-Utilities gewinnen. */
+
+@layer components {
+    /* Primärknopf (Alt .ignis-btn--primary): Verlauf fill → fill-2 → fill, beim Überfahren verschoben. */
+    :root:not([data-skin="classic"]) .btn-primary-skin {
+        background-image: linear-gradient(135deg, var(--accent-fill), var(--accent-fill-2), var(--accent-fill));
+        background-size: 200% 100%;
+        background-origin: border-box;
+        box-shadow: var(--shadow-glow);
+    }
+    :root:not([data-skin="classic"]) .btn-primary-skin:hover:not(:disabled),
+    :root:not([data-skin="classic"]) .btn-primary-skin:focus-visible:not(:disabled) {
+        background-position: 100% 0;
+        box-shadow: var(--shadow-glow-hover);
+    }
+
+    /* Knöpfe (Alt .ignis-btn, --secondary, --icon, __dot): Topbar „Neu“ und Glocke. */
+    .ignis-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-sizing: border-box;
+        height: 36px;
+        padding: 4px 10px;
+        border: 1px solid transparent;
+        border-radius: var(--radius-2);
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 22px;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+    .ignis-btn svg {
+        width: 16px;
+        height: 16px;
+        flex: none;
+    }
+    .ignis-btn--secondary {
+        background:
+            linear-gradient(var(--surface-3), var(--surface-3)) padding-box,
+            linear-gradient(180deg, var(--edge-top), var(--edge-bottom)) border-box;
+        box-shadow: inset 0 1px 0 var(--hi);
+        color: var(--content-text);
+    }
+    .ignis-btn--secondary svg {
+        color: var(--secondary-text);
+    }
+    .ignis-btn--secondary:hover {
+        background:
+            linear-gradient(var(--surface-4), var(--surface-4)) padding-box,
+            linear-gradient(180deg, var(--edge-top), var(--edge-bottom)) border-box;
+    }
+    .ignis-btn--ghost {
+        background: transparent;
+        color: var(--secondary-text);
+    }
+    .ignis-btn--ghost:hover {
+        background: var(--fill-2);
+        color: var(--content-text);
+    }
+    .ignis-btn--icon {
+        width: 36px;
+        padding: 0;
+    }
+    .ignis-btn:focus-visible {
+        outline: 2px solid var(--accent-focus);
+        outline-offset: 2px;
+    }
+    .ignis-btn__dot {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent-text);
+        box-shadow: 0 0 0 2px var(--surface-3);
+        pointer-events: none;
+    }
+
+    /* Topbar (Alt .ignis-topbar, Skin core): Raster Identität | Suche | Aktionen, Fläche wie die Seite, ohne Linie. */
+    /* Mobil zuerst; ab 900 px Suchfeld statt Iconknopf, ab 1001 px die vollen Spalten wie im Alt. */
+    .ignis-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: grid;
+        grid-template-columns: minmax(80px, 1fr) 36px max-content;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
+        height: var(--topbar-h);
+        padding: 0 8px;
+        background-color: var(--bg);
+        background-image: var(--canvas-layers);
+        background-attachment: fixed;
+        color: var(--text-2);
+    }
+    .ignis-topbar__identity {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
+    .ignis-topbar__toggle,
+    .ignis-topbar__user {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        min-width: 32px;
+        height: 36px;
+        padding: 4px 0.4rem;
+        border: 0;
+        border-radius: var(--radius-2);
+        background: transparent;
+        color: var(--text-2);
+        font: inherit;
+        cursor: pointer;
+    }
+    .ignis-topbar__toggle:hover,
+    .ignis-topbar__toggle:focus-visible,
+    .ignis-topbar__user:hover,
+    .ignis-topbar__user:focus-visible,
+    .ignis-topbar__user[data-state="open"] {
+        background: var(--fill-2);
+        color: var(--text);
+        outline: none;
+    }
+    .ignis-burger {
+        position: relative;
+        display: block;
+        width: 16px;
+        height: 12px;
+    }
+    .ignis-burger span {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+    }
+    .ignis-burger span:nth-child(2) {
+        top: 5px;
+    }
+    .ignis-burger span:nth-child(3) {
+        top: 10px;
+    }
+    .ignis-topbar__mark {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        color: var(--text);
+        text-decoration: none;
+    }
+    .ignis-topbar__mark:hover {
+        color: var(--accent-text);
+    }
+    .ignis-topbar__actions {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .ignis-topbar__new-label {
+        display: none;
+    }
+    .ignis-topbar__avatar {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--surface-3);
+        color: var(--text);
+        font-size: 0.66rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+    .ignis-menu__caret {
+        width: 0.6em;
+        height: 0.6em;
+        opacity: 0.7;
+    }
+    .ignis-btn .ignis-menu__caret {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Suche: Iconknopf mobil, ab 900 px Feld mit Lupe, „Suchen“ und Tastenchip. */
+    .ignis-search {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border: 0;
+        border-radius: var(--radius-2);
+        background: transparent;
+        color: var(--secondary-text);
+        font: inherit;
+        cursor: pointer;
+    }
+    .ignis-search:hover {
+        background: var(--fill-2);
+        color: var(--content-text);
+    }
+    .ignis-search:focus-visible {
+        outline: 2px solid var(--accent-focus);
+        outline-offset: 1px;
+    }
+    .ignis-search svg {
+        width: 16px;
+        height: 16px;
+        flex: none;
+    }
+    .ignis-search__label,
+    .ignis-search .ignis-kbd {
+        display: none;
+    }
+    .ignis-kbd {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        box-sizing: border-box;
+        height: 22px;
+        margin-left: auto;
+        padding: 0 6px;
+        border-radius: var(--radius-1);
+        background: var(--kbd);
+        color: var(--secondary-text);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    @media (min-width: 900px) {
+        .ignis-topbar {
+            grid-template-columns: minmax(120px, 180px) minmax(100px, 1fr) max-content;
+            gap: 10px;
+        }
+        .ignis-topbar__actions {
+            gap: 8px;
+        }
+        .ignis-topbar__new-label,
+        .ignis-search__label,
+        .ignis-search .ignis-kbd {
+            display: inline-flex;
+        }
+        .ignis-search {
+            justify-content: flex-start;
+            gap: 8px;
+            width: clamp(220px, 25vw, 360px);
+            max-width: 100%;
+            padding: 0 6px 0 10px;
+            border: 1px solid var(--border-ui);
+            background: var(--surface);
+            color: var(--tertiary-text);
+            font-size: 13px;
+        }
+        .ignis-search:hover {
+            border-color: var(--border-strong);
+            background: var(--surface);
+            color: var(--tertiary-text);
+        }
+        .ignis-search:focus-visible {
+            border-color: var(--accent-focus);
+            box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
+            outline: 2px solid transparent;
+        }
+    }
+    @media (min-width: 1001px) {
+        .ignis-topbar {
+            grid-template-columns: minmax(160px, 240px) minmax(120px, 560px) max-content;
+            gap: 16px;
+        }
+    }
+
+    /* Menüs (Alt .ignis-menu__panel/__item, Skin core) für reka-ui DropdownMenuContent. */
+    .ignis-menu__panel {
+        z-index: 30;
+        box-sizing: border-box;
+        width: 240px;
+        max-width: calc(100vw - 16px);
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
+        padding: 6px;
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius-item);
+        background: var(--overlay);
+        box-shadow: var(--shadow-pop);
+        color: var(--content-text);
+        font-size: 14px;
+    }
+    .ignis-menu__panel--account {
+        width: 320px;
+    }
+    .ignis-menu__item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 36px;
+        padding: 7px 10px;
+        border-radius: var(--radius-1);
+        color: var(--secondary-text);
+        font-size: 14px;
+        line-height: 22px;
+        text-align: left;
+        text-decoration: none;
+        cursor: pointer;
+        outline: none;
+        user-select: none;
+    }
+    .ignis-menu__item svg {
+        width: 16px;
+        height: 16px;
+        flex: none;
+        color: var(--tertiary-text);
+    }
+    .ignis-menu__item[data-highlighted],
+    .ignis-menu__item[data-state="checked"] {
+        background: var(--fill-2);
+        color: var(--content-text);
+    }
+    .ignis-menu__item .ignis-menu__check {
+        margin-left: auto;
+        color: var(--accent-text);
+    }
+    .ignis-menu__heading {
+        padding: 10px 10px 4px;
+        color: var(--tertiary-text);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 16px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    .ignis-menu__sep {
+        height: 1px;
+        margin: 6px 0;
+        background: var(--hairline);
+    }
+    .ignis-menu__identity {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 10px 10px;
+    }
+    .ignis-menu__identity-text {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+    }
+    .ignis-menu__identity-name {
+        color: var(--content-text);
+        font-weight: 500;
+        overflow-wrap: anywhere;
+    }
+    .ignis-menu__identity-role {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: var(--secondary-text);
+        font-size: 12px;
+    }
+    .ignis-menu__role-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: var(--text-3);
+    }
+    /* Darstellung: drei Kacheln nebeneinander, die gewählte mit Rand, Fläche und Häkchen oben rechts. */
+    .ignis-theme-options {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        padding: 6px;
+    }
+    .ignis-theme-options .ignis-menu__item {
+        flex-direction: column;
+        gap: 6px;
+        padding: 10px 2px;
+        border: 1px solid var(--border-subtle);
+        font-size: 12px;
+        text-align: center;
+    }
+    .ignis-theme-options .ignis-menu__item[data-state="checked"] {
+        border-color: var(--border-ui);
+        background: var(--surface-4);
+    }
+    .ignis-theme-options .ignis-menu__check {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 12px;
+        height: 12px;
+    }
+
+    /* Hülle (Alt body.ignis-app, Skin core): Topbar oben, darunter Sidebar | Hauptfläche. Mobil zuerst: */
+    /* < 900 px nur die Hauptfläche, die Sidebar steckt im Drawer (MobileDrawer.vue). */
+    .ignis-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .ignis-shell > .ignis-sidebar {
+        display: none;
+    }
+
+    /* Sidebar (Alt .ignis-sidebar*, Skin core): transparent auf der Seite, Einträge 36 px, aktiv als Pille. */
+    .ignis-sidebar {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        width: var(--sidebar-w);
+        min-width: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    .ignis-sidebar__nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        padding: 8px;
+    }
+    .ignis-sidebar__group {
+        padding: 24px 10px 8px;
+        overflow: hidden;
+        color: var(--tertiary-text);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 16px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .ignis-sidebar__link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-sizing: border-box;
+        height: 36px;
+        padding: 0 10px;
+        border: 1px solid transparent;
+        border-radius: var(--radius-2);
+        color: var(--secondary-text);
+        font-size: 14px;
+        font-weight: 400;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+    .ignis-sidebar__icon {
+        flex: none;
+        width: 18px;
+        height: 16px;
+        color: var(--tertiary-text);
+    }
+    .ignis-sidebar__link:hover {
+        background: var(--fill-1);
+        color: var(--content-text);
+    }
+    .ignis-sidebar__link:focus-visible {
+        outline: 2px solid var(--accent-focus);
+        outline-offset: -2px;
+    }
+    .ignis-sidebar__link[aria-current="page"] {
+        border-color: var(--border-ui);
+        background: var(--fill-2);
+        box-shadow: inset 0 1px 0 var(--hi);
+        color: var(--content-text);
+        font-weight: 500;
+    }
+    .ignis-sidebar__link[aria-current="page"] .ignis-sidebar__icon {
+        color: var(--content-text);
+    }
+    .ignis-sidebar__label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .ignis-sidebar__count {
+        box-sizing: border-box;
+        min-width: 22px;
+        height: 20px;
+        margin-left: auto;
+        padding: 0 6px;
+        border-radius: var(--radius-1);
+        background: var(--well-deep);
+        color: var(--secondary-text);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 20px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+    .ignis-sidebar__external {
+        flex: none;
+        width: 14px;
+        height: 14px;
+        margin-left: auto;
+        color: var(--tertiary-text);
+    }
+    .ignis-sidebar__version {
+        display: flex;
+        flex-shrink: 0;
+        margin-top: auto;
+        padding: 10px 12px;
+        overflow: hidden;
+        border-top: 1px solid var(--border);
+        color: var(--text-3);
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    /* Hauptfläche (Alt main.ignis-main): Tafel auf --surface mit 22 px Radius; mobil randlos. */
+    .ignis-main {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        min-width: 0;
+        min-height: calc(100vh - var(--topbar-h));
+        padding: 16px 16px 24px;
+        background: var(--surface);
+    }
+
+    @media (min-width: 900px) {
+        .ignis-shell {
+            grid-template-columns: calc(var(--sidebar-w) + var(--sidebar-inset)) minmax(0, 1fr);
+        }
+        .ignis-app.is-collapsed .ignis-shell {
+            grid-template-columns: calc(var(--sidebar-w-collapsed) + var(--sidebar-inset)) minmax(0, 1fr);
+        }
+        .ignis-shell > .ignis-sidebar {
+            display: flex;
+            position: sticky;
+            top: var(--topbar-h);
+            height: calc(100vh - var(--topbar-h) - var(--sidebar-inset));
+            margin: 0 0 var(--sidebar-inset) var(--sidebar-inset);
+        }
+        .ignis-main {
+            min-height: calc(100vh - var(--topbar-h) - 8px);
+            margin: 0 8px 8px 0;
+            padding: 24px 24px 48px;
+            border: 1px solid var(--hairline);
+            border-radius: var(--radius-4);
+            box-shadow: var(--shadow-card);
+        }
+
+        /* Eingeklappt (Alt html.is-collapsed): 56 px, nur Icons 40 px, Gruppen als Haarlinie, Zähler als Punkt. */
+        .ignis-app.is-collapsed .ignis-shell > .ignis-sidebar {
+            width: var(--sidebar-w-collapsed);
+        }
+        .is-collapsed .ignis-sidebar__nav {
+            align-items: center;
+            padding-inline: 0;
+        }
+        .is-collapsed .ignis-sidebar__group {
+            width: 24px;
+            height: 1px;
+            margin: 12px auto;
+            padding: 0;
+            background: var(--hairline);
+            font-size: 0;
+        }
+        .is-collapsed .ignis-sidebar__link {
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+        }
+        .is-collapsed .ignis-sidebar__label,
+        .is-collapsed .ignis-sidebar__external,
+        .is-collapsed .ignis-sidebar__version {
+            display: none;
+        }
+        .is-collapsed .ignis-sidebar__count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 999px;
+            background: var(--surface-3);
+            color: var(--content-text);
+            line-height: 16px;
+        }
+    }
+
+    /* Drawer < 900 px (Alt: Sidebar auf --surface mit Scrim), reka-ui Dialog. */
+    .ignis-drawer-scrim {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    .ignis-drawer {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 41;
+        display: flex;
+        flex-direction: column;
+        width: var(--sidebar-w);
+        max-width: 85vw;
+        background: var(--surface);
+        box-shadow: var(--shadow-pop);
+        outline: none;
+    }
+    .ignis-drawer__head {
+        display: flex;
+        flex: none;
+        align-items: center;
+        justify-content: space-between;
+        height: var(--topbar-h);
+        padding: 0 8px 0 16px;
+    }
+    .ignis-drawer .ignis-sidebar {
+        flex: 1;
+        width: auto;
+    }
+
+    /* Seiteninhalt wie Alt .twplus-page: höchstens 88rem, mittig (wirkt erst ab ~1700 px Fensterbreite). */
+    .ignis-main__content {
+        flex: 1 0 auto;
+        width: 100%;
+        max-width: 88rem;
+        margin-inline: auto;
+        padding-bottom: 32px;
+    }
+
+    /* Fuß (Alt assets/components/footer.php) am Ende der Hauptfläche. */
+    .ignis-footer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: end;
+        gap: 12px;
+        width: 100%;
+        max-width: 88rem;
+        margin: 0 auto;
+        padding-top: 16px;
+        border-top: 1px solid var(--hairline);
+        color: var(--secondary-text);
+        font-size: 13px;
+        line-height: 20px;
+    }
+    .ignis-footer__brand {
+        display: grid;
+        gap: 8px;
+        justify-items: start;
+        color: var(--content-text);
+    }
+    .ignis-footer__tagline,
+    .ignis-footer__center p {
+        margin: 0;
+        color: var(--secondary-text);
+    }
+    .ignis-footer__center {
+        display: grid;
+        gap: 4px;
+    }
+    .ignis-footer__version {
+        color: var(--tertiary-text);
+        font-size: 12px;
+    }
+    .ignis-footer__legal {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+    }
+    .ignis-footer__legal a {
+        color: var(--secondary-text);
+        text-decoration: none;
+    }
+    .ignis-footer__legal a:hover {
+        color: var(--content-text);
+        text-decoration: underline;
+    }
+    @media (min-width: 768px) {
+        .ignis-footer {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .ignis-footer__center {
+            text-align: center;
+        }
+        .ignis-footer__legal {
+            justify-content: flex-end;
+        }
+    }
+
+    /* Seitenkopf (Alt .twplus-page-header, Skin core). */
+    .twplus-page-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 16px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+    .twplus-page-header h1 {
+        margin: 0;
+        color: var(--content-text);
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 32px;
+        letter-spacing: -0.01em;
+    }
+    .twplus-page-header__description {
+        max-width: 48rem;
+        margin: 7px 0 0;
+        color: var(--secondary-text);
+        font-size: 14px;
+        line-height: 22px;
+    }
+
+    /* Einstellungskacheln (Alt .twplus-link-grid/-card). */
+    .twplus-link-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    .twplus-link-card {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-3);
+        background: var(--surface);
+        box-shadow: var(--shadow-card);
+        color: inherit;
+        text-decoration: none;
+    }
+    .twplus-link-card:hover,
+    .twplus-link-card:focus-visible {
+        border-color: rgba(var(--accent-rgb), 0.7);
+        background: rgba(var(--accent-rgb), 0.045);
+        outline: none;
+    }
+    .twplus-link-card__body {
+        flex: 1;
+        min-width: 0;
+    }
+    .twplus-link-card__title {
+        display: block;
+        color: var(--content-text);
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .twplus-link-card__description {
+        display: block;
+        margin-top: 4px;
+        color: var(--tertiary-text);
+        font-size: 12px;
+        line-height: 1.45;
+    }
+    .twplus-link-card__arrow {
+        flex: none;
+        width: 12px;
+        height: 12px;
+        margin-left: auto;
+        color: var(--tertiary-text);
+    }
+    @media (min-width: 640px) {
+        .twplus-link-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (min-width: 1100px) {
+        .twplus-link-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    /* Icon-Kästchen (Alt .ignis-glyph / .twplus-link-card__icon / .ignis-empty__glyph, Skin core). */
+    .ignis-glyph {
+        display: inline-grid;
+        flex: none;
+        place-items: center;
+        box-sizing: border-box;
+        width: 40px;
+        height: 40px;
+        border: 1px solid transparent;
+        border-radius: var(--radius-2);
+        background:
+            linear-gradient(var(--surface-4), var(--surface-4)) padding-box,
+            linear-gradient(135deg, var(--edge-top), var(--edge-bottom)) border-box;
+        box-shadow: inset 0 1px 0 var(--hi);
+        color: var(--secondary-text);
+    }
+    .ignis-glyph svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Leerzustand (Alt .ignis-empty, Skin core). */
+    .ignis-empty {
+        display: grid;
+        justify-items: center;
+        padding: 40px 20px 44px;
+        text-align: center;
+    }
+    .ignis-empty .ignis-glyph {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+        border-radius: var(--radius-3);
+    }
+    .ignis-empty .ignis-glyph svg {
+        width: 20px;
+        height: 20px;
+    }
+    .ignis-empty__title {
+        margin: 0 0 6px;
+        color: var(--content-text);
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .ignis-empty__text {
+        max-width: 48ch;
+        margin: 0;
+        color: var(--secondary-text);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* Anmeldung (Alt login.php, .twplus-login*, .ignis-login-stage*, .ignis-alert*), immer dunkel (lib/pageSkin.ts). */
+    /* Abweichungen für Chromium 103: 100vh statt dvh; cqi (Container-Einheiten) durch vw je Breitenstufe ersetzt */
+    /* (Bühne ab 960 px = 1,2/2,2 der Breite ≈ 54,5vw); color-mix() als rgba(--accent-rgb) bzw. in LoginStage.vue gemischt. */
+    .ignis-alert {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.65rem;
+        padding: 0.7rem 0.9rem;
+        border: 1px solid var(--fill-2);
+        border-left: 3px solid var(--tertiary-text);
+        border-radius: var(--radius-2);
+        background: var(--fill-2);
+        color: var(--secondary-text);
+        font-size: var(--fs-sm);
+        line-height: 1.5;
+    }
+    .ignis-alert__icon {
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+        margin-top: 0.1em;
+    }
+    .ignis-alert__body {
+        flex: 1;
+        min-width: 0;
+    }
+    .ignis-alert--ok {
+        background: var(--ok-soft);
+        border-left-color: var(--ok);
+    }
+    .ignis-alert--ok .ignis-alert__icon,
+    .ignis-alert--ok strong {
+        color: var(--ok-text);
+    }
+    .ignis-alert--warn {
+        background: var(--warn-soft);
+        border-left-color: var(--warn);
+    }
+    .ignis-alert--warn .ignis-alert__icon,
+    .ignis-alert--warn strong {
+        color: var(--warn-text);
+    }
+    .ignis-alert--danger {
+        background: var(--danger-soft);
+        border-left-color: var(--danger);
+    }
+    .ignis-alert--danger .ignis-alert__icon,
+    .ignis-alert--danger strong {
+        color: var(--danger-text);
+    }
+    .ignis-alert--info {
+        background: var(--info-soft);
+        border-left-color: var(--info);
+    }
+    .ignis-alert--info .ignis-alert__icon,
+    .ignis-alert--info strong {
+        color: var(--info-text);
+    }
+
+    .twplus-login {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        min-height: 100vh;
+        background: var(--canvas);
+        color: var(--content-text);
+    }
+    .twplus-login__panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 32px;
+        background: var(--surface);
+        box-shadow: var(--shadow-card);
+    }
+    .twplus-login__content {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 420px;
+        padding: 0 6px 6px;
+        border: 1px solid transparent;
+        border-radius: var(--radius-4);
+        background:
+            linear-gradient(180deg, var(--surface-2) 0, var(--bezel-rim) 60px) padding-box,
+            linear-gradient(180deg, var(--edge-top), var(--edge-bottom)) border-box var(--bezel-rim);
+        box-shadow: var(--shadow-card);
+    }
+    .twplus-login__brand {
+        display: flex;
+        align-items: center;
+        min-height: 60px;
+        margin: 0;
+        padding: 0 10px;
+        color: var(--content-text);
+    }
+    .twplus-login__brand img {
+        width: 92px;
+        height: 38px;
+        object-fit: contain;
+        object-position: left;
+    }
+    .twplus-login__well {
+        padding: 24px 20px;
+        border-radius: var(--radius-3);
+        background: var(--well);
+        box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+    .twplus-login__title {
+        margin: 0 0 8px;
+        color: var(--content-text);
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 32px;
+    }
+    .twplus-login__lead {
+        margin: 0 0 20px;
+        color: var(--secondary-text);
+        font-size: 14px;
+        line-height: 22px;
+    }
+    .twplus-login__actions {
+        display: grid;
+        gap: 12px;
+    }
+    .twplus-login__foot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4em;
+        min-height: 44px;
+        margin: 0;
+        padding: 0 10px;
+        color: var(--tertiary-text);
+        font-size: 13px;
+    }
+    .twplus-login__visual {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+    }
+    @media (max-width: 480px) {
+        .twplus-login__panel {
+            padding: 24px 16px;
+        }
+    }
+    @media (min-width: 960px) {
+        .twplus-login {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+        }
+        .twplus-login__visual {
+            position: relative;
+            border-left: 1px solid var(--border-subtle);
+        }
+    }
+    @media print {
+        .twplus-login__visual {
+            display: none;
+        }
+    }
+
+    .ignis-login-stage {
+        --heat: 1;
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(130% 90% at 50% 38%, transparent 45%, var(--shade)), var(--canvas);
+    }
+    .ignis-login-stage::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: var(--canvas-layers);
+    }
+    .ignis-login-stage__heat {
+        position: absolute;
+        right: -25%;
+        bottom: -8%;
+        left: -25%;
+        height: 92%;
+        background:
+            radial-gradient(38% 52% at 50% 100%, rgba(var(--accent-rgb), 0.4), transparent 72%),
+            radial-gradient(62% 92% at 50% 100%, rgba(var(--accent-rgb), 0.5), transparent 76%);
+        opacity: var(--heat);
+        transform-origin: 50% 100%;
+    }
+    .ignis-login-stage__sparks {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        color: var(--accent-fill-2, var(--accent-fill));
+    }
+    .ignis-login-stage__emblem {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(28px, 2.73vw, 44px);
+    }
+    .ignis-login-stage__mark {
+        position: relative;
+        width: min(21.8vw, 44vh, 360px);
+        aspect-ratio: 1;
+    }
+    .ignis-login-stage__mark svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+    }
+    .ignis-login-stage__mark stop {
+        stop-color: var(--stage-trace, var(--accent-fill));
+    }
+    .ignis-login-stage__mark stop + stop {
+        stop-color: var(--stage-trace-2, var(--accent-fill));
+    }
+    .ignis-login-stage__fill {
+        fill: url(#ignis-login-stage-trace) var(--stage-trace, var(--accent-fill));
+        fill-rule: evenodd;
+        fill-opacity: 0.07;
+    }
+    .ignis-login-stage__line {
+        fill: none;
+        stroke: url(#ignis-login-stage-trace) var(--stage-trace, var(--accent-fill));
+        stroke-width: 0.42px;
+        stroke-linejoin: miter;
+    }
+    .ignis-login-stage__glow {
+        filter: blur(9px);
+        opacity: 0.7;
+    }
+    .ignis-login-stage__glow .ignis-login-stage__line {
+        stroke-width: 1.8px;
+    }
+    .ignis-login-stage__caption {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 8px 14px;
+        max-width: 48vw;
+        margin: 0;
+        text-align: center;
+    }
+    .ignis-login-stage__org {
+        color: var(--secondary-text);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+    .ignis-login-stage__dot {
+        flex: none;
+        width: 6px;
+        height: 6px;
+        background: var(--accent-text);
+        transform: rotate(45deg);
+    }
+    .ignis-login-stage__product {
+        color: var(--content-text);
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+    @media (max-width: 959.98px) {
+        .ignis-login-stage__mark {
+            width: min(112vw, 640px);
+            opacity: 0.6;
+        }
+        .ignis-login-stage__caption,
+        .ignis-login-stage__fill,
+        .ignis-login-stage__line + .ignis-login-stage__line {
+            display: none;
+        }
+        .ignis-login-stage__glow {
+            filter: blur(6px);
+        }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        .ignis-login-stage__line {
+            stroke-dasharray: 1 1;
+            animation: ignis-login-stage-draw 2.4s var(--motion-ease) 0.25s both;
+        }
+        .ignis-login-stage__line + .ignis-login-stage__line {
+            animation-duration: 1.6s;
+            animation-delay: 0.9s;
+        }
+        .ignis-login-stage__line + .ignis-login-stage__line + .ignis-login-stage__line {
+            animation-delay: 1.2s;
+        }
+        .ignis-login-stage__fill {
+            animation: ignis-login-stage-fade 1.2s ease-out 2s both;
+        }
+        .ignis-login-stage__glow {
+            animation:
+                ignis-login-stage-glow 1.4s ease-out 1.8s both,
+                ignis-login-stage-breathe 7s ease-in-out 3.2s infinite alternate;
+        }
+        .ignis-login-stage__heat {
+            animation:
+                ignis-login-stage-heat 2.2s ease-out both,
+                ignis-login-stage-heat-breathe 7s ease-in-out 3.2s infinite alternate;
+        }
+        .ignis-login-stage__caption {
+            animation: ignis-login-stage-rise 1s var(--motion-ease) 1.9s both;
+        }
+    }
+
+    /* Dashboard (Alt index.php und assets/components/index/*.php, Skin core). Mischungen aus ui.css als rgba() bzw. als */
+    /* zweite Hintergrundschicht vorberechnet; Bereichsabfragen mobil zuerst mit min-width. */
+
+    /* Töne (Alt :is([data-tone=…], .ignis-chip--…)): nur Variablen, die Bausteine lesen sie. */
+    [data-tone="ok"] {
+        --tone: var(--ok);
+        --tone-soft: var(--ok-soft);
+        --tone-line: var(--ok-line);
+        --tone-text: var(--ok-text);
+    }
+    [data-tone="warn"] {
+        --tone: var(--warn);
+        --tone-soft: var(--warn-soft);
+        --tone-line: var(--warn-line);
+        --tone-text: var(--warn-text);
+    }
+    [data-tone="danger"] {
+        --tone: var(--danger);
+        --tone-soft: var(--danger-soft);
+        --tone-line: var(--danger-line);
+        --tone-text: var(--danger-text);
+    }
+    [data-tone="info"] {
+        --tone: var(--info);
+        --tone-soft: var(--info-soft);
+        --tone-line: var(--info-line);
+        --tone-text: var(--info-text);
+    }
+
+    /* Seitenkopf: Aktionen rechts, Knopf in Steuerhöhe 40 px (Alt .twplus-page-header__actions .ignis-btn). */
+    .twplus-page-header__copy {
+        flex: 1 1 240px;
+        min-width: 0;
+    }
+    .twplus-page-header__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .twplus-page-header__actions .ignis-btn {
+        height: var(--control-h);
+        padding: 0 16px;
+        font-size: 14px;
+    }
+
+    /* Knöpfe klein, Akzent weich, primär (Alt .ignis-btn--sm/--accent-soft/--primary). */
+    .ignis-btn--sm {
+        height: 32px;
+        padding: 4px 10px;
+    }
+    .ignis-btn--accent-soft {
+        border-color: var(--accent-line);
+        background: var(--accent-soft);
+        color: var(--accent-text);
+    }
+    .ignis-btn--accent-soft:hover {
+        border-color: var(--accent-fill);
+    }
+    .ignis-btn--primary {
+        background-color: var(--accent-fill);
+        color: var(--on-accent);
+    }
+
+    /* Zähler (Alt .ignis-count) und Chips (Alt .ignis-chip, Töne über data-tone). */
+    .ignis-count {
+        display: inline-block;
+        box-sizing: border-box;
+        min-width: 22px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: var(--radius-1);
+        background: var(--well-deep);
+        color: var(--secondary-text);
+        font-size: 12px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        line-height: 20px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .ignis-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-sizing: border-box;
+        height: 24px;
+        padding: 0 10px;
+        border: 1px solid var(--border-subtle);
+        border-radius: 999px;
+        background: var(--well);
+        color: var(--secondary-text);
+        font-size: 12px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        line-height: 16px;
+        white-space: nowrap;
+    }
+    .ignis-chip[data-tone] {
+        border-color: var(--tone-line);
+        background: var(--tone-soft);
+        color: var(--tone-text);
+    }
+    .ignis-chip b {
+        font-weight: 600;
+    }
+    .ignis-chip--sm {
+        height: 20px;
+        padding: 0 8px;
+    }
+    .ignis-chip--dot::before {
+        content: "";
+        flex-shrink: 0;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    /* Icon-Kästchen klein und getönt (Alt .ignis-glyph--sm, [data-tone]). */
+    .ignis-glyph--sm {
+        width: 28px;
+        height: 28px;
+        border-radius: var(--radius-1);
+    }
+    .ignis-glyph[data-tone] {
+        background:
+            linear-gradient(var(--tone-soft), var(--tone-soft)) padding-box,
+            linear-gradient(var(--tone-line), var(--tone-line)) border-box;
+        box-shadow: none;
+        color: var(--tone-text);
+    }
+
+    /* Leerzustand klein, Befehlszeile, Fortschritt und Schritte (Alt .ignis-empty--sm, __code, __progress, __steps). */
+    .ignis-empty--sm {
+        padding: 28px 20px 30px;
+    }
+    .ignis-empty--sm .ignis-glyph {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 12px;
+        border-radius: var(--radius-2);
+    }
+    .ignis-empty--sm .ignis-empty__title {
+        font-size: 15px;
+    }
+    .ignis-empty__code {
+        margin: 14px 0 0;
+        color: var(--tertiary-text);
+        font-family: var(--mono);
+        font-size: 13px;
+    }
+    .ignis-empty__progress {
+        display: grid;
+        gap: 6px;
+        width: 100%;
+        max-width: 440px;
+        margin-top: 18px;
+        color: var(--tertiary-text);
+        font-size: 12px;
+        text-align: left;
+    }
+    .ignis-empty__steps {
+        display: grid;
+        gap: 8px;
+        width: 100%;
+        max-width: 440px;
+        margin: 20px 0 0;
+        padding: 0;
+        list-style: none;
+        text-align: left;
+    }
+    .ignis-empty__steps li {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 12px;
+        min-height: 48px;
+        padding: 8px 8px 8px 12px;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-2);
+        background: var(--fill-1);
+        font-size: 14px;
+    }
+    .ignis-empty__step-no {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border: 1px solid var(--border-control);
+        border-radius: 50%;
+        color: var(--tertiary-text);
+        font-size: 12px;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+    .ignis-empty__step-no svg {
+        width: 12px;
+        height: 12px;
+    }
+    .ignis-empty__steps [data-state="done"] {
+        color: var(--tertiary-text);
+    }
+    .ignis-empty__steps [data-state="done"] .ignis-empty__step-no {
+        border-color: transparent;
+        background: rgba(var(--ok-rgb), 0.18);
+        color: var(--ok);
+    }
+    .ignis-empty__steps [data-state="current"] {
+        border-color: rgba(var(--accent-rgb), 0.4);
+        background: rgba(var(--accent-rgb), 0.08);
+    }
+    .ignis-empty__steps [data-state="current"] .ignis-empty__step-no {
+        border: 0;
+        background-color: var(--accent-fill);
+        background-image: linear-gradient(135deg, var(--accent-fill), var(--accent-fill-2));
+        color: var(--on-accent);
+    }
+
+    /* Einrichtungs-Checkliste (Alt setup-checklist.php: div.mb-4 mit „Ausblenden“ rechts darüber). */
+    .ignis-setup {
+        margin-top: 16px;
+    }
+    .ignis-setup__bar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 4px;
+    }
+
+    /* Fortschritt (Alt .ignis-progress, Balken im Akzent, Wert über dem Balken bei --labeled-head). */
+    .ignis-progress {
+        position: relative;
+        width: 100%;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--track);
+        box-shadow: inset 0 0 0 1px var(--border-ui);
+    }
+    .ignis-progress--sm {
+        height: 4px;
+    }
+    .ignis-progress__bar {
+        width: calc(var(--value, 0) * 100%);
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(180deg, var(--btn-hi) 0 40%, transparent 60%), var(--accent-fill);
+        box-shadow:
+            inset 0 1px 0 var(--btn-hi),
+            inset 0 -1px 0 var(--btn-lo),
+            0 0 12px -2px var(--accent-glow);
+    }
+    .ignis-progress--labeled-head {
+        margin-top: 22px;
+    }
+    .ignis-progress__value {
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: clamp(0px, var(--value, 0) * 100% - 2.75em, 100% - 2.75em);
+        width: 2.75em;
+        color: var(--accent-text);
+        font-size: 12px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        line-height: 16px;
+        text-align: right;
+    }
+
+    /* Kennzahlen (Alt .ignis-kpis/.ignis-kpi, .ignis-delta, .ignis-unit). */
+    .ignis-kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+        gap: 12px;
+    }
+    .ignis-kpi {
+        position: relative;
+        display: grid;
+        align-content: start;
+        gap: 6px;
+        min-width: 0;
+        min-height: 104px;
+        padding: 16px;
+        border: 1px solid transparent;
+        border-radius: var(--radius-3);
+        background:
+            linear-gradient(var(--surface-2), var(--surface-2)) padding-box,
+            linear-gradient(180deg, var(--edge-top), var(--edge-bottom)) border-box;
+        box-shadow: var(--shadow-card);
+        color: var(--content-text);
+        text-decoration: none;
+    }
+    a.ignis-kpi:hover {
+        background:
+            linear-gradient(var(--surface-3), var(--surface-3)) padding-box,
+            linear-gradient(180deg, var(--edge-top), var(--edge-bottom)) border-box;
+    }
+    a.ignis-kpi:focus-visible {
+        outline: 2px solid var(--accent-focus);
+        outline-offset: 2px;
+    }
+    .ignis-kpi[data-tone="danger"],
+    a.ignis-kpi[data-tone="danger"]:hover {
+        background:
+            linear-gradient(rgba(var(--danger-rgb), 0.06), rgba(var(--danger-rgb), 0.06)) padding-box,
+            linear-gradient(var(--surface-2), var(--surface-2)) padding-box,
+            linear-gradient(var(--danger-line), var(--danger-line)) border-box;
+    }
+    .ignis-kpi__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 28px;
+    }
+    .ignis-kpi__label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        color: var(--secondary-text);
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 20px;
+    }
+    .ignis-kpi__label svg {
+        color: var(--tertiary-text);
+    }
+    .ignis-kpi[data-tone="danger"] .ignis-kpi__label,
+    .ignis-kpi[data-tone="danger"] .ignis-kpi__label svg,
+    .ignis-kpi[data-tone="danger"] .ignis-kpi__value {
+        color: var(--danger-text);
+    }
+    .ignis-kpi[data-tone="ok"] .ignis-kpi__label svg {
+        color: var(--ok-text);
+    }
+    .ignis-kpi__value {
+        font-size: 28px;
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+        line-height: 34px;
+        letter-spacing: -0.01em;
+        overflow-wrap: anywhere;
+    }
+    .ignis-kpi__sub {
+        color: var(--tertiary-text);
+        font-size: 13px;
+        line-height: 20px;
+    }
+    .ignis-kpi__arrow {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        width: 16px;
+        height: 16px;
+        color: var(--tertiary-text);
+        opacity: 0;
+    }
+    a.ignis-kpi:hover .ignis-kpi__arrow,
+    a.ignis-kpi:focus-visible .ignis-kpi__arrow {
+        opacity: 1;
+    }
+    .ignis-unit {
+        color: var(--tertiary-text);
+        font-size: 0.6em;
+        letter-spacing: 0;
+    }
+    .ignis-delta {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-sizing: border-box;
+        height: 22px;
+        padding: 0 8px;
+        border: 1px solid var(--hairline);
+        border-radius: 999px;
+        background: var(--fill-2);
+        color: var(--secondary-text);
+        font-size: 12px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    /* Raster (Alt .ignis-dash): Hauptspalte + Seitenspalte 320 px ab 1100 px; ohne Seitenspalte nur die Hauptspalte. */
+    .ignis-dash {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+        gap: 16px;
+        margin-top: 16px;
+    }
+    .ignis-dash__col {
+        display: grid;
+        align-content: start;
+        gap: 16px;
+        min-width: 0;
+    }
+    .ignis-dash__side {
+        grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    }
+    @media (min-width: 1101px) {
+        .ignis-dash {
+            grid-template-columns: minmax(0, 1fr) 320px;
+        }
+        .ignis-dash--single {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .ignis-dash__side {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    /* Schale mit Mulde (Alt .ignis-bezel*). */
+    .ignis-bezel {
+        min-width: 0;
+        padding: 0 6px 6px;
+        border: 1px solid transparent;
+        border-radius: var(--radius-4);
+        background:
+            linear-gradient(180deg, var(--surface-2) 0, var(--bezel-rim) 52px) padding-box,
+            linear-gradient(180deg, var(--edge-top), var(--edge-bottom)) border-box var(--bezel-rim);
+        box-shadow: var(--shadow-card);
+    }
+    .ignis-bezel__head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        min-height: 52px;
+        padding: 0 10px;
+    }
+    .ignis-bezel__icon {
+        flex: none;
+        width: 20px;
+        height: 20px;
+        color: var(--tertiary-text);
+    }
+    .ignis-bezel__title {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+        overflow: hidden;
+        color: var(--content-text);
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 24px;
+        text-overflow: ellipsis;
+    }
+    .ignis-bezel__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+    }
+    .ignis-bezel__well {
+        min-width: 0;
+        padding: 20px 16px;
+        border-radius: var(--radius-3);
+        background: var(--well);
+        box-shadow: var(--well-ring);
+    }
+    .ignis-bezel__well--list,
+    .ignis-hints .ignis-bezel__well {
+        display: grid;
+        gap: 8px;
+        padding: 8px;
+    }
+    .ignis-bezel__scroll {
+        display: grid;
+        gap: 8px;
+        max-height: 420px;
+        margin: -8px;
+        padding: 8px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+    }
+    .ignis-bezel__item {
+        min-width: 0;
+        padding: 12px 14px;
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius-item);
+        background: var(--surface-2);
+    }
+    .ignis-bezel__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 0 10px;
+        color: var(--tertiary-text);
+        font-size: 13px;
+        line-height: 20px;
+    }
+    @media (min-width: 641px) {
+        .ignis-bezel__title {
+            white-space: nowrap;
+        }
+    }
+
+    /* Sparklines (Alt .ignis-sparks/.ignis-spark*, spark.js): Datenreihe Cyan, Endpunkt als Punkt. */
+    .ignis-sparks {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+        gap: 8px;
+    }
+    .ignis-spark {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        min-width: 0;
+        height: 72px;
+        padding: 12px 12px 0;
+        overflow: hidden;
+        border-radius: var(--radius-2);
+        background: var(--surface-2);
+        color: var(--series-1);
+    }
+    .ignis-spark__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-width: 0;
+    }
+    .ignis-spark__label {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--tertiary-text);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 16px;
+        letter-spacing: 0.06em;
+        text-overflow: ellipsis;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .ignis-spark__value {
+        color: var(--content-text);
+        font-size: 13px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        line-height: 16px;
+        white-space: nowrap;
+    }
+    .ignis-spark__plot {
+        position: relative;
+        flex: 1;
+        margin: 6px 0 5px;
+    }
+    .ignis-spark__plot svg {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        pointer-events: none;
+    }
+    .ignis-spark__line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5px;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+    }
+    .ignis-spark__end {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border: 2px solid;
+        border-radius: 50%;
+        background: var(--content-text);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    /* Strichskala (Alt .ignis-meter*). */
+    .ignis-meter {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+    }
+    .ignis-bezel__well--list > .ignis-meter {
+        margin-bottom: 6px;
+        padding: 6px 8px 4px;
+    }
+    .ignis-meter__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--secondary-text);
+        font-size: 13px;
+        line-height: 20px;
+    }
+    .ignis-meter__value {
+        color: var(--content-text);
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+    .ignis-meter__scale {
+        display: flex;
+        justify-content: space-between;
+        gap: 2px;
+        height: 20px;
+    }
+    .ignis-meter__tick {
+        flex: 0 0 4px;
+        border-radius: 999px;
+        background: var(--tick-empty);
+    }
+    .ignis-meter__tick.is-on {
+        background: var(--series-1);
+    }
+
+    /* Listeneintrag (Alt .ignis-entry*): Glyph | Titel/Meta | Chip; schmal rutscht der Chip unter den Titel. */
+    .ignis-entry {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 4px 12px;
+        min-width: 0;
+    }
+    .ignis-entry > .ignis-glyph {
+        grid-area: 1 / 1 / span 2;
+    }
+    .ignis-entry__title {
+        grid-column: 2;
+        min-width: 0;
+        overflow: hidden;
+        color: var(--content-text);
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 22px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .ignis-entry__title.ignis-mono {
+        font-size: 13px;
+    }
+    .ignis-entry__title ~ .ignis-chip {
+        grid-area: auto / 2;
+        justify-self: start;
+    }
+    .ignis-entry__meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        grid-column: 2;
+        min-width: 0;
+        color: var(--tertiary-text);
+        font-size: 13px;
+        line-height: 20px;
+    }
+    .ignis-entry__alert {
+        color: var(--danger-text);
+    }
+    @media (min-width: 641px) {
+        .ignis-entry__title ~ .ignis-chip {
+            grid-area: 1 / 3 / span 2;
+            justify-self: end;
+        }
+    }
+    .ignis-mono {
+        font-family: var(--mono);
+        letter-spacing: 0.01em;
+    }
+
+    /* Hinweiskarten (Alt .ignis-hint*). */
+    .ignis-hint {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+        padding: 14px 16px;
+        border: 1px solid var(--hairline);
+        border-radius: var(--radius-item);
+        background: var(--surface-2);
+    }
+    .ignis-hint__head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+    .ignis-hint__title {
+        min-width: 0;
+        margin: 0;
+        color: var(--content-text);
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 22px;
+    }
+    .ignis-hint__title a {
+        color: inherit;
+    }
+    .ignis-hint__title a:hover {
+        text-decoration: underline;
+    }
+    .ignis-hint__text {
+        display: -webkit-box;
+        margin: 0;
+        overflow: hidden;
+        color: var(--secondary-text);
+        font-size: 14px;
+        line-height: 21px;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+    .ignis-hint__action {
+        width: 100%;
+    }
+
+    /* Karte mit Tabelle (Alt .ignis-card, --table, __header/__title/__actions/__scroll, table.ignis-table). */
+    .ignis-card {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        padding: 16px;
+        overflow: hidden;
+        border: 1px solid transparent;
+        border-radius: var(--radius-3);
+        background:
+            linear-gradient(var(--surface-2), var(--surface-2)) padding-box,
+            linear-gradient(180deg, var(--edge-top), var(--edge-bottom)) border-box;
+        box-shadow: var(--shadow-card);
+        color: var(--content-text);
+    }
+    .ignis-card__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+    .ignis-card__title {
+        margin: 0;
+        color: var(--content-text);
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 24px;
+    }
+    .ignis-card__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+    }
+    .ignis-card--table {
+        padding: 0;
+    }
+    .ignis-card--table > .ignis-card__header {
+        margin: 0;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+    .ignis-card__scroll {
+        overflow-x: auto;
+    }
+    .ignis-card__problem {
+        margin: 0 0 12px;
+        color: var(--warn-text);
+        font-size: 13px;
+    }
+    .ignis-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .ignis-table th {
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border-subtle);
+        background: var(--surface-2);
+        color: var(--tertiary-text);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 16px;
+        letter-spacing: 0.06em;
+        text-align: left;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .ignis-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border-subtle);
+        color: var(--content-text);
+        font-size: 14px;
+        line-height: 22px;
+        vertical-align: middle;
+    }
+    .ignis-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+    .ignis-table tbody tr:hover {
+        background: var(--fill-1);
+    }
+    .ignis-table a {
+        color: inherit;
+    }
+    .ignis-table a:hover {
+        text-decoration: underline;
+    }
+    .ignis-table td .ignis-mono {
+        color: var(--secondary-text);
+        font-size: 13px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    /* Ankündigungen (Alt changelog.php, eigener Stil der Karte). */
+    .ignis-announcements {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .ignis-announcements li {
+        padding: 8px 0;
+    }
+    .ignis-announcements li + li {
+        border-top: 1px solid var(--border);
+    }
+    .ignis-announcements__row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+    .ignis-announcements__title {
+        color: var(--content-text);
+        font-weight: 600;
+    }
+    a.ignis-announcements__title:hover {
+        text-decoration: underline;
+    }
+    .ignis-announcements__date {
+        margin-left: auto;
+        color: var(--tertiary-text);
+        font-size: 0.8rem;
+        font-variant-numeric: tabular-nums;
+    }
+    .ignis-announcements__preview {
+        display: -webkit-box;
+        margin: 4px 0 0;
+        overflow: hidden;
+        color: var(--secondary-text);
+        font-size: 0.85rem;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+}
+
+@keyframes ignis-login-stage-draw {
+    from {
+        stroke-dashoffset: 1px;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+@keyframes ignis-login-stage-fade {
+    from {
+        opacity: 0;
+    }
+}
+@keyframes ignis-login-stage-glow {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.7;
+    }
+}
+@keyframes ignis-login-stage-breathe {
+    from {
+        opacity: 0.7;
+    }
+    to {
+        opacity: 0.32;
+    }
+}
+@keyframes ignis-login-stage-heat {
+    from {
+        opacity: 0;
+        transform: scaleY(0.6);
+    }
+    to {
+        opacity: var(--heat);
+        transform: none;
+    }
+}
+@keyframes ignis-login-stage-heat-breathe {
+    from {
+        opacity: var(--heat);
+        transform: none;
+    }
+    to {
+        opacity: calc(var(--heat) * 0.72);
+        transform: scaleY(0.93);
+    }
+}
+@keyframes ignis-login-stage-rise {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+}

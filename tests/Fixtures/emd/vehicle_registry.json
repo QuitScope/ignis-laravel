@@ -1,0 +1,15 @@
+{
+    "intraRP_API_Key": "fixture-key",
+    "timestamp": 1760870400,
+    "vehicle_registry": [
+        {"id": 1, "department": "Rettungsdienst", "value": "RTW 1/83-1", "valuelong": "Rettungswagen 1/83-1", "job": "ambulance", "grade": 0, "image": "rtw.png", "type": "RTW", "locked": 0, "funkkanal": "RD-1"},
+        {"id": 2, "department": "Rettungsdienst", "value": "NEF 1/82-1", "valuelong": "Notarzteinsatzfahrzeug 1/82-1", "job": "ambulance,doctor", "grade": 2, "image": "nef.png", "type": "nef", "locked": 0, "funkkanal": "RD-1"},
+        {"id": 3, "department": "Rettungsdienst", "value": "KTW 1/85-1", "valuelong": null, "job": null, "grade": 0, "image": null, "type": "N-KTW", "locked": 1, "funkkanal": null},
+        {"id": 4, "department": "Feuerwehr", "value": "HLF 1/46-1", "valuelong": "Hilfeleistungslöschgruppenfahrzeug", "job": "fire", "grade": 0, "image": "hlf.png", "type": "HLF", "locked": 0, "funkkanal": "FW-2"},
+        {"id": 5, "department": "Rettungsdienst", "value": "", "valuelong": "ohne Funkrufname", "job": "ambulance", "grade": 0, "image": null, "type": "RTW", "locked": 0, "funkkanal": null},
+        {"id": 6, "department": "Luftrettung", "value": "Christoph 77", "valuelong": "Rettungshubschrauber", "job": "ambulance", "grade": 3, "image": "rth.png", "type": "RTH", "locked": 0, "funkkanal": "LR"},
+        {"id": 7, "department": null, "value": "Kdow 1/10-1", "valuelong": null, "job": null, "grade": 0, "image": null, "type": null, "locked": 0, "funkkanal": null},
+        {"id": 8, "value": "MTW 1/19-1", "type": "MTW", "locked": true},
+        {"value": "ITW 1/84-1", "type": "ITW", "locked": false}
+    ]
+}

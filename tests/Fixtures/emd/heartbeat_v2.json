@@ -1,0 +1,29 @@
+{
+    "intraRP_API_Key": "fixture-key",
+    "timestamp": 1792764000,
+    "protocol_version": 2,
+    "serverName": "Fixture Server",
+    "serverTime": "2026-10-23 14:05:00",
+    "heartbeat": {"tick": 12, "interval": 5000},
+    "request_modules": ["status_poll", "situation_reports"],
+    "dispatch_data": {"vehicles": [
+        {"value": "RTW 1/83-1", "dispatch": 4711, "source": 3,
+         "dispatch_data": {"postal": "1023", "dispatch_code": "B2 Y", "dispatch_issue": "Brand Kueche, Person verletzt", "issue": "Brand",
+             "caller_phonenumber": "555-0101", "caller_name": "Erika Anrufer", "location_x": 215.5, "location_y": -810.25, "bluelight": "yes",
+             "patienten": [{"alter": "34", "vorname": "Max", "nachname": "Muster"}],
+             "lagemeldungen": [
+                 {"type": "control_dispatch_form_entry_type_situation_report", "text": "Rauch aus Fenster 1. OG", "date": "23.10.2026", "time": "14:03"},
+                 {"type": "control_dispatch_form_entry_type_note", "text": "interne Notiz", "date": "23.10.2026", "time": "14:03"}
+             ]}},
+        {"value": "NEF 1/82-1", "dispatch": 4711, "source": 3},
+        {"value": "LHF 1/44-1", "dispatch": 4711, "source": 3},
+        {"value": "KTW 1/85-1", "dispatch": 0, "source": 3}
+    ]},
+    "status_updates": {"last_id": 811, "statuses": [
+        {"id": 812, "mission_number": 4711, "date": "23.10.2026", "time": "14:04", "sender": "RTW 1/83-1", "status": "3", "timestamp": "23.10.2026 14:04"}
+    ]},
+    "lagemeldungen": {"einsaetze": [{"einsatznummer": 4711, "lagemeldungen": [
+        {"type": "control_dispatch_form_entry_type_situation_report_important", "text": "Gasgeruch im Treppenhaus", "date": "23.10.2026", "time": "14:04"}
+    ]}]},
+    "fallback_statuses": {"entries": [{"vehicle_name": "LHF 1/44-1", "status": "2", "time": "14:04", "date": "23.10.2026", "queued_at": 1792764000}]}
+}

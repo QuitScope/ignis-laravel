@@ -1,0 +1,26 @@
+import { registerWidget } from '@/lib/dashboardWidgets';
+import ApplicationsCard from '@/components/forms/ApplicationsCard.vue';
+import OwnProtocolsCard from '@/components/enotf/OwnProtocolsCard.vue';
+import OwnIncidentsCard from '@/components/firetab/OwnIncidentsCard.vue';
+import AnnouncementsCard from './AnnouncementsCard.vue';
+import ChecklistCard from './ChecklistCard.vue';
+import DocumentsCard from './DocumentsCard.vue';
+import EnotfOpenKpi from './EnotfOpenKpi.vue';
+import HintsCard from './HintsCard.vue';
+import Incidents from './Incidents.vue';
+import IncidentsKpi from './IncidentsKpi.vue';
+import KpiTiles from './KpiTiles.vue';
+import VehicleCard from './VehicleCard.vue';
+
+registerWidget('checklist', ChecklistCard);
+registerWidget('incidents_kpi', IncidentsKpi);
+registerWidget('vehicle_kpi', KpiTiles);
+registerWidget('incidents', Incidents);
+registerWidget('vehicles', VehicleCard);
+registerWidget('own_documents', DocumentsCard);
+registerWidget('hints', HintsCard);
+registerWidget('announcements', AnnouncementsCard);
+registerWidget('own_applications', ApplicationsCard);
+registerWidget('own_incidents', OwnIncidentsCard);
+registerWidget('own_protocols', OwnProtocolsCard);
+registerWidget('enotf_open', EnotfOpenKpi);

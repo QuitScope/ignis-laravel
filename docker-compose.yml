@@ -1,0 +1,201 @@
+# Ignis production stack. Copy docker/.env.example to .env next to this file,
+# set DB_PASSWORD, APP_URL and UPDATER_SECRET, then: docker compose up -d
+name: ignis
+
+# Docker logs: rotate (10 MB x 5 per container).
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "5"
+
+x-app: &app
+  build:
+    context: .
+    args:
+      # Written into the image as VERSION (the installed version the update compares against).
+      IGNIS_VERSION: ${IGNIS_VERSION:-dev}
+  image: ${IMAGE_TAG:-ignis:local}
+  restart: unless-stopped
+  logging: *logging
+  security_opt:
+    - no-new-privileges:true
+  environment: &app-env
+    APP_URL: ${APP_URL:?set APP_URL in .env}
+    DB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+    DB_CONNECTION: mariadb
+    DB_HOST: db
+    DB_PORT: "3306"
+    DB_DATABASE: ignis
+    DB_USERNAME: ignis
+    IGNIS_VERSION: ${IGNIS_VERSION:-dev}
+    # '*' is acceptable only because the app port is bound to 127.0.0.1 (only the local
+    # reverse proxy can reach it). Do not use it if the port is ever published.
+    TRUSTED_PROXIES: ${TRUSTED_PROXIES:-*}
+    # Optional override of the generated storage/app.key (a Laravel key, base64:...).
+    APP_KEY: ${APP_KEY:-}
+    # GitHub repository (owner/name) of the signed releases; empty = update check and update locked.
+    IGNIS_RELEASE_REPO: ${IGNIS_RELEASE_REPO:-}
+    # Realtime (opt-in, INSTALL.md "Echtzeit"): BROADCAST_CONNECTION=reverb plus COMPOSE_PROFILES=reverb in .env.
+    # Empty REVERB_APP_* are generated once into the storage volume (storage/reverb.keys, docker/entrypoint.sh).
+    # The app reaches the server internally (reverb:8081); browsers go through the app's nginx (/app).
+    BROADCAST_CONNECTION: ${BROADCAST_CONNECTION:-null}
+    REVERB_APP_ID: ${REVERB_APP_ID:-}
+    REVERB_APP_KEY: ${REVERB_APP_KEY:-}
+    REVERB_APP_SECRET: ${REVERB_APP_SECRET:-}
+    REVERB_HOST: reverb
+    REVERB_PORT: "8081"
+    REVERB_SCHEME: http
+    # Session cookie only over HTTPS. Plain-http test setups (no TLS proxy) set SESSION_SECURE_COOKIE=false in .env.
+    SESSION_SECURE_COOKIE: ${SESSION_SECURE_COOKIE:-true}
+  volumes:
+    # Holds the generated APP_KEY (storage/app.key), uploads and logs.
+    - storage:/var/www/html/storage
+  depends_on:
+    app:
+      condition: service_healthy
+
+services:
+  app:
+    <<: *app
+    environment:
+      <<: *app-env
+      IGNIS_INSTALL_TOKEN: ${IGNIS_INSTALL_TOKEN:-}
+      # Legacy import (docs/dev/import.md). Only here: config is cached at start, so exec -e cannot work.
+      # An empty host means "not configured".
+      LEGACY_DB_HOST: ${LEGACY_DB_HOST:-}
+      LEGACY_DB_PORT: ${LEGACY_DB_PORT:-3306}
+      LEGACY_DB_DATABASE: ${LEGACY_DB_DATABASE:-legacy}
+      LEGACY_DB_USERNAME: ${LEGACY_DB_USERNAME:-root}
+      LEGACY_DB_PASSWORD: ${LEGACY_DB_PASSWORD:-}
+      IGNIS_IMPORT_LEGACY_TIMEZONE: ${IGNIS_IMPORT_LEGACY_TIMEZONE:-Europe/Berlin}
+      IGNIS_TIMEZONE: ${IGNIS_TIMEZONE:-Europe/Berlin}
+      # serversideup Laravel automations: migrate --force (waits for DB), storage:link, optimize.
+      AUTORUN_ENABLED: "true"
+      # Update by click (Weg B): the app asks the updater container, signed with UPDATER_SECRET. State, log and
+      # backups live in volumes shared with the updater.
+      IGNIS_UPDATE_DRIVER: docker
+      UPDATER_URL: http://updater:8099
+      UPDATER_SECRET: ${UPDATER_SECRET:?set UPDATER_SECRET in .env (openssl rand -hex 32)}
+      IGNIS_UPDATE_STATE_PATH: /var/lib/ignis-update/state/state.json
+      IGNIS_UPDATE_LOG_DIR: /var/lib/ignis-update/state
+      IGNIS_UPDATE_BACKUP_PATH: /var/lib/ignis-update/backups
+    volumes:
+      - storage:/var/www/html/storage
+      # read-only: only the updater writes state, log and backups
+      - update-state:/var/lib/ignis-update/state:ro
+      - update-backups:/var/lib/ignis-update/backups:ro
+    networks:
+      - default
+      - update
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+      start_interval: 3s
+
+  worker:
+    <<: *app
+    command: ["php", "artisan", "queue:work", "--tries=3"]
+    healthcheck:
+      test: ["CMD", "healthcheck-queue"]
+      start_period: 10s
+
+  scheduler:
+    <<: *app
+    command: ["php", "artisan", "schedule:work"]
+    healthcheck:
+      test: ["CMD", "healthcheck-schedule"]
+      start_period: 10s
+
+  # Realtime WebSocket server. Only with COMPOSE_PROFILES=reverb (and BROADCAST_CONNECTION=reverb). No
+  # published port: the app's nginx proxies /app/ (the WebSocket) to it on the internal network.
+  # The click updater swaps it along with app/worker/scheduler when its container exists (DockerUpdater::services()).
+  reverb:
+    <<: *app
+    profiles: ["reverb"]
+    command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8081"]
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@fsockopen('127.0.0.1', 8081) ? 0 : 1);"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # Runs updates by click (DockerUpdater). The ONLY service with the Docker socket; no published port, reachable
+  # only from app on the internal network `update`; its own network for the way out to GitHub (nothing comes in).
+  # It verifies every release itself (signature, version) and only runs images named by the signed manifest.
+  updater:
+    build:
+      context: .
+      dockerfile: updater/Dockerfile
+    image: ${UPDATER_IMAGE_TAG:-ignis-updater:local}
+    restart: unless-stopped
+    # reaps the detached update jobs it starts
+    init: true
+    logging: *logging
+    environment:
+      UPDATER_SECRET: ${UPDATER_SECRET:?set UPDATER_SECRET in .env (openssl rand -hex 32)}
+      IGNIS_RELEASE_REPO: ${IGNIS_RELEASE_REPO:-}
+      IGNIS_UPDATE_STATE_PATH: /var/lib/ignis-update/state/state.json
+      IGNIS_UPDATE_LOG_DIR: /var/lib/ignis-update/state
+      IGNIS_UPDATE_BACKUP_PATH: /var/lib/ignis-update/backups
+      # This directory (compose file and .env, project name from `name:`), mounted read-only below; the updater
+      # adds its image override file (-f) and never writes here.
+      IGNIS_COMPOSE_FILES: /project/docker-compose.yml
+      # The image override and trial compose files: a volume no other service mounts (the updater passes them to
+      # compose, so nothing else may be able to write them). Compose itself sees only the variables in .env.
+      IGNIS_UPDATER_PRIVATE_DIR: /var/lib/ignis-updater
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/project:ro
+      - update-state:/var/lib/ignis-update/state
+      - update-backups:/var/lib/ignis-update/backups
+      - updater-private:/var/lib/ignis-updater
+    networks:
+      - update
+      - updater-egress
+
+  db:
+    image: mariadb:11@sha256:f16d7a344413e519dff518f27bdb221388f84b0d274c97c4fb5f2cb0dc1b34fa
+    logging: *logging
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ignis
+      MARIADB_USER: ignis
+      MARIADB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      # Root password: optional DB_ROOT_PASSWORD, else random and kept only in the db volume (.root-password);
+      # never in the log. docker/mariadb/init/10-ignis.sh (fresh volume only) also grants the update trial database.
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-}
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "1"
+      MARIADB_ROOT_HOST: localhost
+    volumes:
+      - db:/var/lib/mysql
+      - ./docker/mariadb/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  db:
+  storage:
+  update-state:
+  update-backups:
+  updater-private:
+
+networks:
+  default:
+  # app <-> updater only, no way out
+  update:
+    internal: true
+  # the updater's way to GitHub (nothing else is on it)
+  updater-egress:

@@ -1,0 +1,138 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './tokens.css';
+@import './skin.css';
+@import './enotf.css';
+
+@source '../views';
+@source '../js';
+
+@custom-variant dark (&:is(:root:not([data-theme="light"]) *));
+/* Tablet pages (resources/js/lib/pageSkin.ts): for the few utilities that must keep the old look there. */
+@custom-variant classic (&:is(:root[data-skin="classic"] *));
+
+@font-face {
+    font-family: 'Geist';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/geist-v4-latin-regular.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Geist';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/geist-v4-latin-500.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Geist';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/fonts/geist-v4-latin-600.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Geist';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/geist-v4-latin-700.woff2') format('woff2');
+}
+
+/* shadcn-vue variables mapped to the ignis tokens (tokens.css; the classic set re-declares them with the old mapping) */
+:root {
+    --background: var(--bg);
+    --foreground: var(--text);
+    --card: var(--surface-2);
+    --card-foreground: var(--text);
+    --popover: var(--overlay);
+    --popover-foreground: var(--text);
+    --primary: var(--accent-fill);
+    --primary-foreground: var(--on-accent);
+    --secondary: var(--fill-3);
+    --secondary-foreground: var(--text);
+    --muted: var(--surface-3);
+    --muted-foreground: var(--text-3);
+    --accent-foreground: var(--text);
+    --destructive: var(--danger);
+    --input: var(--border-ui);
+    --ring: var(--accent-focus);
+}
+
+@theme inline {
+    --font-sans: var(--font);
+    --font-mono: var(--mono);
+
+    --color-bg: var(--bg);
+    --color-bg-2: var(--bg-2);
+    --color-surface: var(--surface);
+    --color-surface-2: var(--surface-2);
+    --color-surface-3: var(--surface-3);
+    --color-border: var(--border);
+    --color-border-strong: var(--border-strong);
+    --color-text: var(--text);
+    --color-text-2: var(--text-2);
+    --color-text-3: var(--text-3);
+    --color-accent: var(--accent);
+    --color-accent-hover: var(--accent-hover);
+    --color-ok: var(--ok);
+    --color-warn: var(--warn);
+    --color-danger: var(--danger);
+    --color-info: var(--info);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --radius-sm: var(--radius-sm);
+    --radius-md: var(--radius-md);
+    --radius-lg: var(--radius-lg);
+    --radius-xl: var(--radius-xl);
+}
+
+/* FiveM's CEF (Chromium 103) has no `translate` property (Chrome 104), which Tailwind 4's translate-* set;
+   without this, centred dialogs land bottom-right. In the utilities layer, so an unlayered rule can still win.
+   See docs/dev/cef.md. */
+@layer utilities {
+    @supports not (translate: 0) {
+        [class*='translate-'] {
+            transform: translate(var(--tw-translate-x), var(--tw-translate-y));
+        }
+    }
+    /* Akzent als Schrift (Skin core): die Textrolle --accent-text (hell ≥ 4,5:1 auf Weiß), nicht die Füllung
+       --accent (hell nur ~3,2:1), wie im Alt. Tablet-Seiten (classic) behalten --accent. */
+    :root:not([data-skin='classic']) .text-accent,
+    :root:not([data-skin='classic']) .text-primary,
+    :root:not([data-skin='classic']) .hover\:text-accent:hover {
+        color: var(--accent-text);
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground font-sans antialiased;
+        /* Alt: Rauschen über --canvas (classic: none). */
+        background-image: var(--canvas-layers);
+        font-size: 14px;
+    }
+    :root[data-skin="classic"] body {
+        font-size: 16px;
+    }
+}

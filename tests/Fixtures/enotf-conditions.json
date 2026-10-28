@@ -1,0 +1,136 @@
+{
+    "_doc": "Plausibility contract for ConditionsService.php and enotfConditions.ts (tests/Unit/Enotf/ConditionsServiceTest.php, tests/js/enotfConditions.test.ts). L01-L21 = the 21 legacy cases (plugins/enotf/tests/Unit/CrewConditionsServiceTest.php), E1-E12 edge cases (E9-E12: medis rows or the confirmation medis_keine, 9b). A case: values (flat legacy keys, page form conventions) or extends 'full' + set/unset. Expectations: violations ('rule:field', order-insensitive), violation_count, counts (violations per section), active_count/active (rules for values.transportziel), sections (fill state: status string or exact object), section_order. Sections are page slugs (FieldSchema), not the legacy numbers.",
+    "full": {
+        "patsex": 0, "edatum": "2026-01-01", "ezeit": "12:00", "transportziel": 1,
+        "salarm": "2026-01-01T11:50", "spat": "2026-01-01T12:05", "sende": "2026-01-01T13:00", "eart": 1,
+        "transp_adresse": { "strasse": "Musterstr.", "hnr": "1", "ort": null, "ortsteil": null },
+        "awfrei_1": 1, "zyanose_1": 1, "b_symptome": 0, "b_auskult": 0, "c_kreislauf": 1, "c_ekg": 1,
+        "c_puls_reg": 1, "c_puls_rad": 1, "d_bewusstsein": 1, "d_ex_1": 1,
+        "d_pupillenw_1": 1, "d_pupillenw_2": 1, "d_lichtreakt_1": 1, "d_lichtreakt_2": 1,
+        "d_gcs_1": 0, "d_gcs_2": 0, "d_gcs_3": 0, "psych": [1],
+        "spo2": 98, "atemfreq": 15, "rrsys": 120, "herzfreq": 80, "bz": 90,
+        "naca_initial": 2, "elokation": 1, "diagnose_haupt": 22,
+        "awsicherung_neu": 0, "b_beatmung": 1, "c_zugang": [], "medis": [], "medis_keine": true,
+        "ebesonderheiten": [1], "na_nachf": true, "pfname": "Mustermann", "prot_by": 2, "rea_status": 1
+    },
+    "cases": [
+        { "name": "L01 base rule set has 35 rules", "values": {}, "active_count": 35 },
+        {
+            "name": "L02 empty protocol violates 34 base rules (rea_details only for rea_status 2)",
+            "values": {},
+            "violations": [
+                "edatum:edatum", "ezeit:ezeit", "transportziel:transportziel", "salarm:salarm", "spat:spat", "sende:sende",
+                "eart:eart", "transp_adresse:transp_adresse", "prot_by:prot_by", "patsex:patsex", "elokation:elokation",
+                "atemwege:awfrei_1", "zyanose:zyanose_1", "b_symptome:b_symptome", "b_auskult:b_auskult",
+                "c_kreislauf:c_kreislauf", "c_ekg:c_ekg", "c_puls:c_puls_reg", "d_bewusstsein:d_bewusstsein",
+                "d_extremitaeten:d_ex_1", "d_pupillen:d_pupillenw_1", "d_gcs:d_gcs_1", "psych:psych", "messwerte:spo2",
+                "naca_initial:naca_initial", "diagnose_haupt:diagnose_haupt", "awsicherung_neu:awsicherung_neu",
+                "b_beatmung:b_beatmung", "c_zugang:c_zugang", "medis:medis", "rea_status:rea_status",
+                "ebesonderheiten:ebesonderheiten", "na_nachf:na_nachf", "pfname:pfname"
+            ],
+            "counts": { "rettdaten": 9, "anamnese": 2, "erstbefund": 13, "diagnose": 2, "massnahmen": 5, "abschluss": 3 }
+        },
+        { "name": "L03 Fehleinsatz reduces to 11 active rules", "values": { "transportziel": 4 }, "active_count": 11 },
+        {
+            "name": "L04 Fehleinsatz without further data has 10 open rules",
+            "values": { "transportziel": 4 },
+            "violations": [
+                "edatum:edatum", "ezeit:ezeit", "salarm:salarm", "sende:sende", "eart:eart", "transp_adresse:transp_adresse",
+                "elokation:elokation", "ebesonderheiten:ebesonderheiten", "pfname:pfname", "prot_by:prot_by"
+            ]
+        },
+        {
+            "name": "L05 every Fehleinsatz override names a base rule (35 - 24 = 11)",
+            "values": { "transportziel": 4 },
+            "active": ["edatum", "ezeit", "transportziel", "salarm", "sende", "eart", "transp_adresse", "elokation", "ebesonderheiten", "pfname", "prot_by"]
+        },
+        { "name": "L06 transportziel 2/21/22 add ziel_adresse, s7, s8 (38 rules)", "values": { "transportziel": 2 }, "active_count": 38 },
+        {
+            "name": "L07 transport without destination address reports the addition",
+            "extends": "full", "set": { "transportziel": 2, "s7": "2026-01-01T12:30", "s8": "2026-01-01T12:45" },
+            "violations": ["ziel_adresse:ziel_adresse"]
+        },
+        { "name": "L08 patsex 0 counts as filled", "values": { "patsex": 0 }, "sections": { "anamnese": { "status": "partfilled", "filled": 1, "total": 2 } } },
+        { "name": "L09 ezeit '0' counts as empty", "values": { "ezeit": "0" }, "sections": { "rettdaten": { "status": "unfilled", "filled": 0, "total": 9 } } },
+        {
+            "name": "L10 section status lists every page section in order",
+            "values": {},
+            "section_order": ["rettdaten", "anamnese", "erstbefund", "diagnose", "massnahmen", "verlauf", "abschluss"]
+        },
+        { "name": "L11 verlauf has no required columns (nocheck)", "values": {}, "sections": { "verlauf": { "status": "nocheck", "filled": 0, "total": 0 } } },
+        {
+            "name": "L12 full protocol fills every checked section",
+            "extends": "full",
+            "sections": { "rettdaten": "filled", "anamnese": "filled", "erstbefund": "filled", "diagnose": "filled", "massnahmen": "filled", "abschluss": "filled" }
+        },
+        { "name": "L13 Fehleinsatz leaves erstbefund without checks", "values": { "transportziel": 4 }, "sections": { "erstbefund": "nocheck" } },
+        { "name": "L14 full protocol is releasable", "extends": "full", "violations": [] },
+        { "name": "L15 without pfname not releasable", "extends": "full", "unset": ["pfname"], "violations": ["pfname:pfname"] },
+        { "name": "L16 empty pfname counts as missing", "extends": "full", "set": { "pfname": "" }, "violations": ["pfname:pfname"] },
+        { "name": "L17 empty protocol is not releasable", "values": {}, "violation_count": 34 },
+        { "name": "L18 NA protocol needs no NA request", "extends": "full", "set": { "prot_by": 1 }, "unset": ["na_nachf"], "violations": [] },
+        {
+            "name": "L19 reanimation performed needs the required details",
+            "extends": "full", "set": { "rea_status": 2, "rea_ursache": 1 },
+            "violations": ["rea_details:rea_ursache"]
+        },
+        { "name": "L20 reanimation not performed closes the tree (rea_status 6)", "extends": "full", "set": { "rea_status": 6 }, "violations": [] },
+        { "name": "L21 without rea_status not releasable", "extends": "full", "unset": ["rea_status"], "violations": ["rea_status:rea_status"] },
+        {
+            "name": "E1 reanimation performed with every required detail is releasable",
+            "extends": "full",
+            "set": { "rea_status": 2, "rea_ursache": 1, "rea_kollaps": 99, "rea_hdm_durch": 4, "rea_hdm_zeit": "12:03", "rea_rosc": 2, "rea_kh_aufnahme": 1 },
+            "violations": []
+        },
+        {
+            "name": "E2 reanimation as string code, one detail an empty string",
+            "extends": "full",
+            "set": { "rea_status": "2", "rea_ursache": 1, "rea_kollaps": 99, "rea_hdm_durch": 4, "rea_hdm_zeit": "", "rea_rosc": 2, "rea_kh_aufnahme": 1 },
+            "violations": ["rea_details:rea_ursache"]
+        },
+        {
+            "name": "E3 transport with NA (21): address and times required",
+            "extends": "full", "set": { "transportziel": 21 },
+            "violations": ["ziel_adresse:ziel_adresse", "s7:s7", "s8:s8"],
+            "counts": { "rettdaten": 3 }
+        },
+        {
+            "name": "E4 RTH (22): an address object without any value is missing",
+            "extends": "full",
+            "set": { "transportziel": 22, "s7": "2026-01-01T12:30", "s8": "2026-01-01T12:45", "ziel_adresse": { "strasse": "", "hnr": null } },
+            "violations": ["ziel_adresse:ziel_adresse"]
+        },
+        {
+            "name": "E5 Fehleinsatz ignores missing patient data",
+            "extends": "full", "set": { "transportziel": 4 },
+            "unset": ["patsex", "psych", "medis", "rea_status", "spo2", "diagnose_haupt", "na_nachf", "c_zugang"],
+            "violations": []
+        },
+        { "name": "E6 Fehleinsatz code as string", "values": { "transportziel": "4" }, "violation_count": 10 },
+        {
+            "name": "E7 ZERO_IS_VALID: '0' fills awsicherung_neu/b_beatmung/c_zugang/medis, not rea_status",
+            "values": { "awsicherung_neu": "0", "b_beatmung": 0, "c_zugang": "0", "medis": "0", "rea_status": "0" },
+            "sections": { "massnahmen": { "status": "partfilled", "filled": 4, "total": 5 } },
+            "counts": { "massnahmen": 0 }
+        },
+        {
+            "name": "E8 form conventions: 0 vitals and blank text are empty, empty lists and false are set",
+            "extends": "full",
+            "set": { "spo2": 0, "transp_adresse": { "strasse": "", "hnr": null }, "pfname": "  ", "psych": [], "na_nachf": false, "ebesonderheiten": [] },
+            "violations": ["messwerte:spo2", "transp_adresse:transp_adresse", "pfname:pfname"]
+        },
+        {
+            "name": "E9 medis: no rows without the confirmation medis_keine are missing (legacy '[]' unconfirmed)",
+            "extends": "full", "unset": ["medis_keine"],
+            "violations": ["medis:medis"],
+            "sections": { "massnahmen": { "status": "partfilled", "filled": 4, "total": 5 } }
+        },
+        { "name": "E10 medis: confirmation false counts as missing", "extends": "full", "set": { "medis_keine": false }, "violations": ["medis:medis"] },
+        {
+            "name": "E11 medis: a given row satisfies the rule without confirmation",
+            "extends": "full", "set": { "medis": [{ "name": "Heparin" }] }, "unset": ["medis_keine"],
+            "violations": [], "sections": { "massnahmen": "filled" }
+        },
+        { "name": "E12 medis: confirmation without the key medis", "extends": "full", "unset": ["medis"], "violations": [] }
+    ]
+}
