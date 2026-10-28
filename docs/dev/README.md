@@ -19,3 +19,7 @@ Installation und Einrichtung stehen in [INSTALL.md](../../INSTALL.md), der Über
 
 - [import.md](import.md): `ignis:import-legacy`: Voraussetzungen, Ablauf, was je Modul übernommen wird, Fehlersuche
 - [tests.md](tests.md): Testgruppen, MariaDB-Lauf, Altschema laden
+
+## Beiträge und Versionen
+
+Änderungen kommen über Pull Requests nach `main`. Der Titel des PR (bei Squash-Merge wird er der Commit-Titel) beginnt mit `feat:` für neue Funktionen oder `fix:` für Fehlerbehebungen, zum Beispiel `fix: Fahrzeugliste zeigt gelöschte Einträge nicht mehr`. Daraus entstehen Versionsnummer und Release-Notizen. Andere Präfixe (`docs:`, `ci:`, `chore:`, `refactor:`, `test:`) zählen nicht für die Version. Ein Bruch für Betreiber steht als `feat!:` oder `fix!:` im Titel.

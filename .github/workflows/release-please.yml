@@ -1,0 +1,40 @@
+name: Release PR
+
+# Keeps one open release PR on main that collects all changes since the last release (version and notes from the
+# commit titles). Merging it creates the draft release; release.yml then builds, signs (after approval) and attaches.
+#
+# RELEASE_PLEASE_TOKEN (optional secret, a personal token with contents and pull requests write): without it the
+# release PR does not start the CI workflow, so its required check stays pending and an admin has to merge it.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.rp.outputs.release_created }}
+      tag_name: ${{ steps.rp.outputs.tag_name }}
+    steps:
+      - id: rp
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  release:
+    needs: please
+    if: needs.please.outputs.release_created == 'true'
+    uses: ./.github/workflows/release.yml
+    with:
+      tag: ${{ needs.please.outputs.tag_name }}
+    secrets: inherit
+    permissions:
+      contents: write
+      packages: write

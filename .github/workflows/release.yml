@@ -1,10 +1,16 @@
 name: Release
 
-# Tag v1.2.3 -> release archive + Docker image (GHCR) + DRAFT GitHub release.
+# Release v1.2.3 -> release archive + Docker image (GHCR) + DRAFT GitHub release.
+# Called by release-please.yml after the release PR is merged (input "tag"), or started by pushing a tag by hand.
 # Job "sign" runs in the environment "release" (required reviewer), signs with the secret UPDATE_SIGNING_KEY and
 # attaches manifest.json and manifest.json.sig. The operator reviews the draft and publishes it.
 
 on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
   push:
     tags:
       - 'v*'
@@ -26,10 +32,12 @@ jobs:
           persist-credentials: false
       - name: Version from tag
         id: v
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          version="${TAG#v}"
           semver='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'
-          if ! [[ "$version" =~ $semver ]]; then echo "tag $GITHUB_REF_NAME is not v<SemVer>" >&2; exit 1; fi
+          if ! [[ "$version" =~ $semver ]]; then echo "tag $TAG is not v<SemVer>" >&2; exit 1; fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "image=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
       - uses: shivammathur/setup-php@v2
@@ -64,21 +72,23 @@ jobs:
       - name: Draft release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag || github.ref_name }}
           IMAGE: ${{ steps.v.outputs.image }}
           DIGEST: ${{ steps.push.outputs.digest }}
           VERSION: ${{ steps.v.outputs.version }}
         run: |
-          cat > notes.md <<EOF
-          Version ${VERSION}
-
-          Image: \`${IMAGE}\`
-          Image digest: \`${DIGEST}\`
-
-          Draft: the archive is signed after approval; check the notes and publish.
-          EOF
-          flags=""
-          case "$VERSION" in *-*) flags="--prerelease" ;; esac
-          gh release create "$GITHUB_REF_NAME" "dist/ignis-${VERSION}.zip" --draft $flags --title "$GITHUB_REF_NAME" --notes-file notes.md
+          images="$(printf '## Docker-Image\n\nImage: `%s`\nImage digest: `%s`\n' "$IMAGE" "$DIGEST")"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            # draft made by release-please: add the archive and the image lines to its notes
+            gh release upload "$TAG" "dist/ignis-${VERSION}.zip" --clobber
+            printf '%s\n\n%s\n' "$(gh release view "$TAG" --json body -q .body)" "$images" > notes.md
+            gh release edit "$TAG" --notes-file notes.md
+          else
+            printf 'Version %s\n\n%s\n' "$VERSION" "$images" > notes.md
+            flags=""
+            case "$VERSION" in *-*) flags="--prerelease" ;; esac
+            gh release create "$TAG" "dist/ignis-${VERSION}.zip" --draft $flags --title "$TAG" --notes-file notes.md
+          fi
 
   sign:
     needs: build
@@ -90,6 +100,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
+      # only code that went through main (PR and CI) may use the key
+      - run: git merge-base --is-ancestor "$GITHUB_SHA" origin/main
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
@@ -99,15 +112,16 @@ jobs:
       - name: Sign and upload manifest
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag || github.ref_name }}
           SIGNING_KEY: ${{ secrets.UPDATE_SIGNING_KEY }}
           VERSION: ${{ needs.build.outputs.version }}
           IMAGE: ${{ needs.build.outputs.image }}
           DIGEST: ${{ needs.build.outputs.digest }}
         run: |
           mkdir dist
-          gh release download "$GITHUB_REF_NAME" -p "ignis-${VERSION}.zip" -D dist --repo "$GITHUB_REPOSITORY"
+          gh release download "$TAG" -p "ignis-${VERSION}.zip" -D dist --repo "$GITHUB_REPOSITORY"
           key="$RUNNER_TEMP/update-private.key"
           (umask 077 && printf '%s' "$SIGNING_KEY" > "$key")
           php tools/release/sign.php "dist/ignis-${VERSION}.zip" --key="$key" --image="$IMAGE" --image-digest="$DIGEST"
           rm -f "$key"
-          gh release upload "$GITHUB_REF_NAME" dist/manifest.json dist/manifest.json.sig --clobber --repo "$GITHUB_REPOSITORY"
+          gh release upload "$TAG" dist/manifest.json dist/manifest.json.sig --clobber --repo "$GITHUB_REPOSITORY"
