@@ -29,7 +29,7 @@ einer echten Umgebung ausprobiert. Noch nicht getestet sind zum Beispiel:
 Mach vor jedem Import und jedem Update eine Sicherung. Wenn dir ein Fehler auffällt, schreib ein Issue mit Version,
 den Schritten zum Nachstellen und dem passenden Log-Auszug. Bitte ohne Passwörter, Tokens oder Patientendaten.
 
-Die Version 1.0.0 ist vorbereitet, aber noch nicht veröffentlicht.
+Aktuelle Version: [1.0.0](https://github.com/QuitScope/ignis-laravel/releases/tag/v1.0.0).
 
 ## So sieht es aus
 
