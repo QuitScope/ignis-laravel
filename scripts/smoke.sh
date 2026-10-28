@@ -91,11 +91,11 @@ for svc in app worker scheduler; do
 done
 
 echo "==> hardening: exif, db root password not logged, trial grant"
-dc exec -T app php -m | grep -qx exif || fail "PHP exif missing"
+dc exec -T app php -m | grep -x exif >/dev/null || fail "PHP exif missing"
 dc exec -T app php -i | grep -E '^(upload_max_filesize|post_max_size) '
 if dc logs db --no-color | grep -qiE 'GENERATED ROOT PASSWORD'; then fail "db log contains a root password"; fi
 dc exec -T db sh -c 'test -s /var/lib/mysql/.root-password' || fail "random root password not kept in the db volume"
-dc exec -T db sh -c 'mariadb -uignis -p"$MARIADB_PASSWORD" -e "SHOW GRANTS"' | grep -q 'ignis_trial' || fail "no grant on ignis_trial"
+dc exec -T db sh -c 'mariadb -uignis -p"$MARIADB_PASSWORD" -e "SHOW GRANTS"' | grep 'ignis_trial' >/dev/null || fail "no grant on ignis_trial"
 
 echo "==> image contents"
 dc exec -T app test -f public/build/manifest.json || fail "public/build missing"
