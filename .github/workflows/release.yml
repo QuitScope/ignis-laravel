@@ -1,8 +1,8 @@
 name: Release
 
 # Tag v1.2.3 -> release archive + Docker image (GHCR) + DRAFT GitHub release.
-# This workflow does NOT sign: the private key stays with the operator, who adds manifest.json and
-# manifest.json.sig to the draft and publishes it.
+# Job "sign" runs in the environment "release" (required reviewer), signs with the secret UPDATE_SIGNING_KEY and
+# attaches manifest.json and manifest.json.sig. The operator reviews the draft and publishes it.
 
 on:
   push:
@@ -14,7 +14,11 @@ permissions:
   packages: write
 
 jobs:
-  release:
+  build:
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      image: ${{ steps.v.outputs.image }}
+      digest: ${{ steps.push.outputs.digest }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -70,8 +74,40 @@ jobs:
           Image: \`${IMAGE}\`
           Image digest: \`${DIGEST}\`
 
-          Draft: the operator signs the archive locally and adds manifest.json and manifest.json.sig before publishing.
+          Draft: the archive is signed after approval; check the notes and publish.
           EOF
           flags=""
           case "$VERSION" in *-*) flags="--prerelease" ;; esac
           gh release create "$GITHUB_REF_NAME" "dist/ignis-${VERSION}.zip" --draft $flags --title "$GITHUB_REF_NAME" --notes-file notes.md
+
+  sign:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, sodium, zip
+          coverage: none
+      - run: composer install --no-dev -o --no-interaction --prefer-dist
+      - name: Sign and upload manifest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SIGNING_KEY: ${{ secrets.UPDATE_SIGNING_KEY }}
+          VERSION: ${{ needs.build.outputs.version }}
+          IMAGE: ${{ needs.build.outputs.image }}
+          DIGEST: ${{ needs.build.outputs.digest }}
+        run: |
+          mkdir dist
+          gh release download "$GITHUB_REF_NAME" -p "ignis-${VERSION}.zip" -D dist --repo "$GITHUB_REPOSITORY"
+          key="$RUNNER_TEMP/update-private.key"
+          (umask 077 && printf '%s' "$SIGNING_KEY" > "$key")
+          php tools/release/sign.php "dist/ignis-${VERSION}.zip" --key="$key" --image="$IMAGE" --image-digest="$DIGEST"
+          rm -f "$key"
+          gh release upload "$GITHUB_REF_NAME" dist/manifest.json dist/manifest.json.sig --clobber --repo "$GITHUB_REPOSITORY"
